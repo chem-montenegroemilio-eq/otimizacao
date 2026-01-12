@@ -153,4 +153,5 @@ def funcao_loop_C_jmenosZ_j_ate_menor_a_0(lista_matriz_A, lista_todas_variaveis,
     matriz_A: {lista_matriz_A}
     vetor_b: {lista_coef_b}'''   
     [print(lista) for lista in lista_C_j_Z_j_evitar_infinito]
-    return  print(texto_fim_loop)
+    print(texto_fim_loop)
+    return coeficiente_base_tableau_C_j, lista_matriz_A, lista_coef_b 
