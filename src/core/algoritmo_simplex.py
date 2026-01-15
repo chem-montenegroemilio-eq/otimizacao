@@ -18,6 +18,7 @@ def funcao_calculo_iteracoes(lista_todas_variaveis, coeficiente_base_tableau_C_j
     indice_coluna_pivo = lista_todas_variaveis.index(coluna_pivo) # lembrando que eh o valor da coluna que substitui o valor da fila
     indice_fila_pivo = vetor_variaveis_C_B.index(coluna_pivo)
     valor_pivo = lista_matriz_A[indice_fila_pivo][indice_coluna_pivo]
+    print('valor pivo',valor_pivo)
     for j, elemento_fila in enumerate(lista_matriz_A[indice_fila_pivo]):
         valor_pivo_substituir = float(elemento_fila / valor_pivo)
         lista_matriz_A[indice_fila_pivo][j] = valor_pivo_substituir
@@ -25,6 +26,7 @@ def funcao_calculo_iteracoes(lista_todas_variaveis, coeficiente_base_tableau_C_j
     for i, fila_matriz in enumerate(lista_matriz_A):        
         # Tratando matriz A
         if i != indice_fila_pivo:
+            # print('fila matriz',fila_matriz)
             valor_a_eliminar = fila_matriz[indice_coluna_pivo]
             for j, elemento_fila in enumerate(fila_matriz):
                 valor_a_substituir_em_fila = (lista_matriz_A[indice_fila_pivo][j] * (-valor_a_eliminar) ) + lista_matriz_A[i][j]
@@ -72,7 +74,7 @@ def funcao_loop_C_jmenosZ_j_ate_menor_a_0(lista_matriz_A, lista_todas_variaveis,
         print(f'# Inicia loop n°{k+1}')
         # Caso se calcula a base que entra-sai, entao comeca-se por definir o maior valor de C_j-Z_j, e define-se a coluna a utilizar (.index()) e a variavel
         # ALTERACAO PARA EVITAR LOOP INFINITO - TESTE
-        print('vetor_C_j_menos_Z_j', vetor_C_j_menos_Z_j)
+        print('vetor C_j_menos_Z_j', vetor_C_j_menos_Z_j)
         lista_C_j_Z_j_evitar_infinito.append(tuple(vetor_C_j_menos_Z_j))
         if len(set(lista_C_j_Z_j_evitar_infinito)) == len(lista_C_j_Z_j_evitar_infinito):
             maior_valor_C_j_Z_j = max(vetor_C_j_menos_Z_j)
@@ -120,8 +122,8 @@ def funcao_loop_C_jmenosZ_j_ate_menor_a_0(lista_matriz_A, lista_todas_variaveis,
 
         print('novo vetor variaveis C_B:', vetor_variaveis_C_B)
         print('novo vetor C_B:', vetor_coeficientes_C_B)
-        print('matriz_A:', lista_matriz_A)
-        print('vetor b:', lista_coef_b)
+        print('matriz_A:\n', '\n'.join( '\t'+str(fila) for fila in lista_matriz_A))
+        print('vetor b:\n \t' + ''.join(str(lista_coef_b)))
         print('\n     # Inicia iteracao')
         lista_matriz_A, lista_coef_b, vetor_coeficientes_C_B = funcao_calculo_iteracoes(
             lista_todas_variaveis, 
@@ -133,8 +135,8 @@ def funcao_loop_C_jmenosZ_j_ate_menor_a_0(lista_matriz_A, lista_todas_variaveis,
             coluna_pivo
             )
 
-        print('matriz A tratada:', lista_matriz_A)
-        print('vetor_b tratado', lista_coef_b)    
+        print('matriz A tratada:\n' + '\n'.join('\t'+str(fila) for fila in lista_matriz_A))
+        print('vetor_b tratado:\n \t' + ''.join(str(lista_coef_b)))    
         print('\n     # Inicia calculo Z_j_e_Z_j_menos_C_j')
         vetor_Z_j, vetor_C_j_menos_Z_j = funcao_calculo_Z_j_e_Z_j_menos_C_j(lista_todas_variaveis, lista_matriz_A, coeficiente_base_tableau_C_j, vetor_coeficientes_C_B)
 
@@ -145,13 +147,14 @@ def funcao_loop_C_jmenosZ_j_ate_menor_a_0(lista_matriz_A, lista_todas_variaveis,
         k+=1
     otimo_fo = sum(elemento_C_B*lista_coef_b[i] for i, elemento_C_B in enumerate(vetor_coeficientes_C_B) )
 
-    texto_fim_loop = f'''-------------------------------------------------------
+    texto_fim_loop = f'''
+    -------------------------------------------------------
     -------------------------------------------------------
     Fim do loop:
     otimo da fo: {-otimo_fo}
     valores f.o. fase1: {coeficiente_base_tableau_C_j}
-    matriz_A: {lista_matriz_A}
-    vetor_b: {lista_coef_b}'''   
+    matriz_A:\n {'\n'.join( '\t' + str(linha) for linha in lista_matriz_A)}
+    vetor_b:\n \t {''.join(str(lista_coef_b))}'''   
     [print(lista) for lista in lista_C_j_Z_j_evitar_infinito]
     print(texto_fim_loop)
     return coeficiente_base_tableau_C_j, lista_matriz_A, lista_coef_b 

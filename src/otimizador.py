@@ -71,7 +71,7 @@ class Otimizador:
             'VARIAVEIS:', lista_todas_variaveis,
             '\nVETOR FUNÇÃO OBJETIVO:', lista_fo,
             '\nMATRIZ A:\n' + '\n'.join( '\t'+str(linha) for linha in lista_matriz_A),
-            '\nVETOR b:', lista_coef_b
+            '\nVETOR b:\n' + ''.join(str(lista_coef_b))
             )
     
     def mostrar_funcao_objetivo(self):
@@ -99,6 +99,15 @@ class Otimizador:
             return False
 
     def _calculo_simplex_fase1(self):
+        print('''
+              -------------------------
+              -------------------------
+              Inicializa fase 1
+              -------------------------
+              -------------------------
+              
+              ''')
+
         """Utilizando as listas dos vetores/matrices resolve o problema simplex de vertice otimo."""
         lista_todas_variaveis, lista_fo, lista_matriz_A, lista_coef_b = self._tratamento_dados(self.funcao_objetivo, self.restricoes)
         # Metodo Simplex caso fase 1
@@ -111,7 +120,14 @@ class Otimizador:
         return lista_todas_variaveis, lista_nova_fo, lista_nova_A, lista_novo_b
     
     def _calculo_simplex_fase2(self, lista_todas_variaveis, lista_nova_fo, lista_nova_A, lista_novo_b):
-        print('\nInicializa fase 2')
+        print('''
+              -------------------------
+              -------------------------
+              Inicializa fase 2
+              -------------------------
+              -------------------------
+              
+              ''')
         lista_todas_variaveis, lista_nova_fo, lista_nova_A, lista_novo_b = self._calculo_simplex_fase1()
         lista_indices_a = []
         # encontro indices que precisam ser elimados nas colunas das lista (vetores e matrices)
@@ -125,14 +141,14 @@ class Otimizador:
             for i, fila in enumerate(lista_nova_A):
                 fila.pop(indices_eliminar)
                 lista_nova_A[i] = fila
-        # print(lista_todas_variaveis ,'\n', lista_nova_fo,'\n', lista_nova_A)
+        print(lista_todas_variaveis ,'\n', lista_nova_fo,'\n', lista_nova_A)
 
-        coeficiente_base_tableau_C_j, vetor_variaveis_C_B, vetor_coeficientes_C_B = algoritmo_simplex.funcao_C_j_e_C_B(lista_todas_variaveis, lista_nova_fo)
-        ## AQUI DEVE COMECAR A FUNCAO PARA Z_j e C_j-Z_j
-        vetor_Z_j, vetor_C_j_menos_Z_j = algoritmo_simplex.funcao_calculo_Z_j_e_Z_j_menos_C_j(lista_todas_variaveis, lista_nova_A, coeficiente_base_tableau_C_j, vetor_coeficientes_C_B)
-        ## AQUI DEVE COMECAR O LOOP ATE C_j-Z_j <= 0
-        algoritmo_simplex.funcao_loop_C_jmenosZ_j_ate_menor_a_0(lista_nova_A, lista_todas_variaveis, vetor_variaveis_C_B, vetor_coeficientes_C_B, coeficiente_base_tableau_C_j, vetor_C_j_menos_Z_j, lista_novo_b)
-        # lista_nova_fo, lista_nova_A, lista_novo_b = algoritmo_simplex.funcao_loop_C_jmenosZ_j_ate_menor_a_0(lista_nova_A, lista_todas_variaveis, vetor_variaveis_C_B, vetor_coeficientes_C_B, coeficiente_base_tableau_C_j, vetor_C_j_menos_Z_j, lista_novo_b)
+        # coeficiente_base_tableau_C_j, vetor_variaveis_C_B, vetor_coeficientes_C_B = algoritmo_simplex.funcao_C_j_e_C_B(lista_todas_variaveis, lista_nova_fo)
+        # ## AQUI DEVE COMECAR A FUNCAO PARA Z_j e C_j-Z_j
+        # vetor_Z_j, vetor_C_j_menos_Z_j = algoritmo_simplex.funcao_calculo_Z_j_e_Z_j_menos_C_j(lista_todas_variaveis, lista_nova_A, coeficiente_base_tableau_C_j, vetor_coeficientes_C_B)
+        # ## AQUI DEVE COMECAR O LOOP ATE C_j-Z_j <= 0
+        # algoritmo_simplex.funcao_loop_C_jmenosZ_j_ate_menor_a_0(lista_nova_A, lista_todas_variaveis, vetor_variaveis_C_B, vetor_coeficientes_C_B, coeficiente_base_tableau_C_j, vetor_C_j_menos_Z_j, lista_novo_b)
+        # # lista_nova_fo, lista_nova_A, lista_novo_b = algoritmo_simplex.funcao_loop_C_jmenosZ_j_ate_menor_a_0(lista_nova_A, lista_todas_variaveis, vetor_variaveis_C_B, vetor_coeficientes_C_B, coeficiente_base_tableau_C_j, vetor_C_j_menos_Z_j, lista_novo_b)
 
     def simplex(self):
         """Determina a fase e retorna os valores resolvidos pelo metodo simplex."""
@@ -141,9 +157,8 @@ class Otimizador:
             self._calculo_simplex_fase1()
         else:
             if self._determinador() == True:
-                print('Porque o problema possui restricoes de igualdade. \nSera resolvida a Fase 1:')
+                print('Porque o problema possui restricoes de igualdade. \nSera resolvida a Fase 1, depois Fase 2:')
                 self._calculo_simplex_fase1()
-                
                 
                 lista_todas_variaveis, lista_fo, lista_matriz_A, lista_coef_b = self._tratamento_dados(self.funcao_objetivo, self.restricoes) 
                 self._calculo_simplex_fase2(lista_todas_variaveis, lista_fo, lista_matriz_A, lista_coef_b)
@@ -165,9 +180,23 @@ otimizacao_emilio = Otimizador()
 
 # otimizacao_emilio.mostrar_funcao_objetivo()
 # otimizacao_emilio.mostrar_restricoes()
-otimizacao_emilio.mostrar_problema()
+# otimizacao_emilio.mostrar_problema()
 
-otimizacao_emilio.simplex()
-
+# otimizacao_emilio.simplex()
 # otimizacao_emilio._calculo_simplex_fase2()
 
+# EXEMPLO YOUTUBE
+# otimizacao_emilio.adicionar_funcao_objetivo('max. + 6x_1 - 7x_2 - 4x_3')
+# otimizacao_emilio.adicionar_restricao('+ 2x_1 + 5x_2 - 1x_3 <= 18')
+# otimizacao_emilio.adicionar_restricao('- 1x_1 + 1x_2 + 2x_3 >= 14')
+# otimizacao_emilio.adicionar_restricao('+ 3x_1 +  2x_2 + 2x_3 == 26')
+# otimizacao_emilio.mostrar_problema()
+# otimizacao_emilio.simplex()
+
+# SOLUCIONAR PROBLEMA SIMPLEX COM RESULTADOS LP OBTIDOS PARA FASE 2
+otimizacao_emilio.adicionar_funcao_objetivo('min. + 3000x_1 + 20000x_2 + 30000x_3 + 10000x_4 + 0x_5 + 0x_6')
+otimizacao_emilio.adicionar_restricao('+ 10x_1 + 0x_2 + 0x_3 + 5x_4 + 0x_5 + 1x_6 <= 320')
+otimizacao_emilio.adicionar_restricao('+ 10x_1 - 5x_2 + 0x_3 - 8x_4 + 1x_5 + 0x_6 <= 0')
+otimizacao_emilio.adicionar_restricao('+ 1x_1 + 1x_2 + 1x_3 + 1x_4 + 0x_5 + 0x_6 <= 20')
+# otimizacao_emilio.mostrar_problema()
+otimizacao_emilio.simplex()
