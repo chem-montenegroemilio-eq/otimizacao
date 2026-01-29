@@ -40,7 +40,9 @@ class Otimizador:
                           restricoes=str):
         """Faz tratamento dos strings e converte-os em vetores e matrices para resolver o problema de oritmizacao"""
         # Define-se a f.o.: min. ou max. e separa do string da equacao
-        fo_min_max, fo_equacao = funcao_objetivo.split('.')
+        substituir_ponto = funcao_objetivo.find('.')
+        funcao_objetivo = funcao_objetivo[:substituir_ponto] + '|' + funcao_objetivo[substituir_ponto+1:]
+        fo_min_max, fo_equacao = funcao_objetivo.split('|')
         fo_equacao.replace(' ', '')
         # Obtem-se variaveis e coeficientes separados numa funcao
         dicionario_fo =  parser.funcao_coef_variaveis(fo_equacao)
