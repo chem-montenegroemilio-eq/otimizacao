@@ -129,9 +129,7 @@ class Otimizador:
               -------------------------
               
               ''')
-        # APAGAR?
-        # lista_todas_variaveis, lista_nova_fo, lista_nova_A, lista_novo_b = self._calculo_simplex_fase1()
-        
+        # para encontrar variaveis artificiais
         lista_indices_a = []
         # encontro indices que precisam ser elimados nas colunas das lista (vetores e matrices)
         for i, item in enumerate(lista_todas_variaveis):
@@ -148,12 +146,12 @@ class Otimizador:
                'Lista f.o.:','\n',lista_nova_fo,'\n', 
                'Lista matriz A:','\n',lista_nova_A,'\n', 
                'Lista vetor b:','\n',lista_novo_b)
-
-        # coeficiente_base_tableau_C_j, vetor_variaveis_C_B, vetor_coeficientes_C_B = algoritmo_simplex.funcao_C_j_e_C_B(lista_todas_variaveis, lista_nova_fo)
-        # ## AQUI DEVE COMECAR A FUNCAO PARA Z_j e C_j-Z_j
-        # vetor_Z_j, vetor_C_j_menos_Z_j = algoritmo_simplex.funcao_calculo_Z_j_e_Z_j_menos_C_j(lista_todas_variaveis, lista_nova_A, coeficiente_base_tableau_C_j, vetor_coeficientes_C_B)
-        # ## AQUI DEVE COMECAR O LOOP ATE C_j-Z_j <= 0
-        # algoritmo_simplex.funcao_loop_C_jmenosZ_j_ate_menor_a_0(lista_nova_A, lista_todas_variaveis, vetor_variaveis_C_B, vetor_coeficientes_C_B, coeficiente_base_tableau_C_j, vetor_C_j_menos_Z_j, lista_novo_b)
+        # Cria coeficientes C_j e o vetor e as variaveis C_B 
+        coeficiente_base_tableau_C_j, vetor_variaveis_C_B, vetor_coeficientes_C_B = algoritmo_simplex.funcao_C_j_e_C_B(lista_todas_variaveis, lista_nova_fo)
+        ## AQUI DEVE COMECAR A FUNCAO PARA CALCULAR Z_j e C_j-Z_j
+        vetor_Z_j, vetor_C_j_menos_Z_j = algoritmo_simplex.funcao_calculo_Z_j_e_Z_j_menos_C_j(lista_todas_variaveis, lista_nova_A, coeficiente_base_tableau_C_j, vetor_coeficientes_C_B)
+        ## AQUI DEVE COMECAR O LOOP ATE C_j-Z_j <= 0
+        algoritmo_simplex.funcao_loop_C_jmenosZ_j_ate_menor_a_0(lista_nova_A, lista_todas_variaveis, vetor_variaveis_C_B, vetor_coeficientes_C_B, coeficiente_base_tableau_C_j, vetor_C_j_menos_Z_j, lista_novo_b)
         # # lista_nova_fo, lista_nova_A, lista_novo_b = algoritmo_simplex.funcao_loop_C_jmenosZ_j_ate_menor_a_0(lista_nova_A, lista_todas_variaveis, vetor_variaveis_C_B, vetor_coeficientes_C_B, coeficiente_base_tableau_C_j, vetor_C_j_menos_Z_j, lista_novo_b)
 
     def simplex(self):
@@ -201,10 +199,10 @@ otimizacao_emilio = Otimizador()
 # otimizacao_emilio.simplex()
 
 # TESTE DO PROBLEMA DO GUT
-otimizacao_emilio.adicionar_funcao_objetivo('min. - 0.062x_1 - 0.074x_2')
+otimizacao_emilio.adicionar_funcao_objetivo('max. + 0.062x_1 + 0.074x_2')
 otimizacao_emilio.adicionar_restricao('+ 1x_1 + 1x_2 <= 10')
-otimizacao_emilio.adicionar_restricao('- 1x_1 + 0x_2 <= 0')
-otimizacao_emilio.adicionar_restricao('+ 0x_1 - 1x_2 <= 0')
+# otimizacao_emilio.adicionar_restricao('- 1x_1 + 0x_2 <= 0')
+# otimizacao_emilio.adicionar_restricao('+ 0x_1 - 1x_2 <= 0')
 # otimizacao_emilio.mostrar_problema()
 otimizacao_emilio.simplex()
 
