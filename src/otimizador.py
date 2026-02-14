@@ -131,11 +131,11 @@ class Otimizador:
               ''')
         # para encontrar variaveis artificiais
         lista_indices_a = []
-        # encontro indices que precisam ser elimados nas colunas das lista (vetores e matrices)
+        # encontro indices de a que precisam ser elimados nas colunas das lista (vetores e matrices)
         for i, item in enumerate(lista_todas_variaveis):
             if 'a' in item:
                 lista_indices_a.append(i)
-        # elimino indices das filas 
+        # elimino indices de a das filas 
         for indices_eliminar in sorted(lista_indices_a, reverse=True):
             lista_todas_variaveis.pop(indices_eliminar)
             lista_nova_fo.pop(indices_eliminar)
@@ -206,6 +206,14 @@ otimizacao_emilio.adicionar_restricao('+ 1x_1 + 1x_2 <= 10')
 # otimizacao_emilio.mostrar_problema()
 otimizacao_emilio.simplex() 
 
+# SOLUCIONAR PROBLEMA SIMPLEX COM RESULTADOS LP 
+# otimizacao_emilio.adicionar_funcao_objetivo('min. + 3000x_1 + 20000x_2 + 30000x_3 + 10000x_4 ')
+# otimizacao_emilio.adicionar_restricao('+ 20x_1 + 5x_2 + 10x_3 + 2x_4 <= 200')
+# otimizacao_emilio.adicionar_restricao('- 10x_1 - 20x_2 - 20x_3 - 14x_4 <= -80')
+# otimizacao_emilio.adicionar_restricao('+ 1x_1 + 1x_2 + 1x_3 + 1x_4  <= 20')
+# otimizacao_emilio.mostrar_problema()
+# otimizacao_emilio.simplex()
+
 # SOLUCIONAR PROBLEMA SIMPLEX COM RESULTADOS LP OBTIDOS PARA FASE 2
 # otimizacao_emilio.adicionar_funcao_objetivo('min. + 3000x_1 + 20000x_2 + 30000x_3 + 10000x_4 + 0x_5 + 0x_6')
 # otimizacao_emilio.adicionar_restricao('+ 10x_1 + 0x_2 + 0x_3 + 5x_4 + 0x_5 + 1x_6 <= 320')
@@ -213,5 +221,3 @@ otimizacao_emilio.simplex()
 # otimizacao_emilio.adicionar_restricao('+ 1x_1 + 1x_2 + 1x_3 + 1x_4 + 0x_5 + 0x_6 <= 20')
 # otimizacao_emilio.mostrar_problema()
 # otimizacao_emilio.simplex()
-
- 
