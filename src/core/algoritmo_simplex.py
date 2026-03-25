@@ -115,7 +115,6 @@ def funcao_loop_C_jmenosZ_j_ate_menor_a_0(lista_matriz_A, lista_todas_variaveis,
         vetor_variaveis_C_B[vetor_variaveis_C_B.index(fila_pivo)] = coluna_pivo
             # Atualizando vetor C_B
         for i, variavel_C_B in enumerate(vetor_variaveis_C_B):
-            # if variavel_C_B in lista_todas_variaveis:
             indice_a_ser_considerado = lista_todas_variaveis.index(variavel_C_B)
             valor_a_ser_substituido_em_C_B = coeficiente_base_tableau_C_j[indice_a_ser_considerado]       
             vetor_coeficientes_C_B[i] = valor_a_ser_substituido_em_C_B

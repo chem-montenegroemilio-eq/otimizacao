@@ -38,7 +38,7 @@ class Otimizador:
     def _tratamento_dados(self, 
                           funcao_objetivo=str,
                           restricoes=str):
-        """Faz tratamento dos strings e converte-os em vetores e matrices para resolver o problema de oritmizacao"""
+        """Faz tratamento dos strings e converte-os em vetores e matrices para resolver o problema de otimizacao"""
         # Define-se a f.o.: min. ou max. e separa do string da equacao
         substituir_ponto = funcao_objetivo.find('.')
         funcao_objetivo = funcao_objetivo[:substituir_ponto] + '|' + funcao_objetivo[substituir_ponto+1:]
@@ -127,11 +127,11 @@ class Otimizador:
               ''')
         # para encontrar variaveis artificiais
         lista_indices_a = []
-        # encontro indices de a que precisam ser elimados nas colunas das lista (vetores e matrices)
+        # encontro indices de 'a' que precisam ser elimados nas colunas das lista (vetores e matrices)
         for i, item in enumerate(lista_todas_variaveis):
             if 'a' in item:
                 lista_indices_a.append(i)
-        # elimino indices de a das filas 
+        # elimino indices de 'a' das filas 
         for indices_eliminar in sorted(lista_indices_a, reverse=True):
             lista_todas_variaveis.pop(indices_eliminar)
             lista_nova_fo.pop(indices_eliminar)
