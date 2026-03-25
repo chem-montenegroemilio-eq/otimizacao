@@ -85,10 +85,6 @@ class Otimizador:
         print(f"RESTRIÇÕES: ")
         for restricao in self.restricoes:
             print(f"{restricao}")        
-    
-    def adicionar_1(self):
-        self.contador += 1
-        print(self.contador)
 
     def _determinador(self):
         """Baseado nas variaveis artificiais, determina se precisa passar pela fase 1 (True) ou nao (False)."""
