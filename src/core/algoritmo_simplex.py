@@ -1,41 +1,3 @@
-### Funcao para calculo de Z_j e Z_j-C_j
-def funcao_calculo_Z_j_e_Z_j_menos_C_j(lista_todas_variaveis, lista_matriz_A, coeficiente_base_tableau_C_j, vetor_coeficientes_C_B):
-    vetor_Z_j = []
-    vetor_C_j_menos_Z_j = []
-    for i, variavel in enumerate(lista_todas_variaveis):
-        Z = 0
-        for k, elemento in enumerate(vetor_coeficientes_C_B):
-            valor_A_j = lista_matriz_A[k][i] 
-            Z += elemento*valor_A_j
-        vetor_Z_j.append(Z)
-        C_j_menos_Z_j = 0    
-        C_j_menos_Z_j = coeficiente_base_tableau_C_j[i]-vetor_Z_j[i]
-        vetor_C_j_menos_Z_j.append(C_j_menos_Z_j)
-    return vetor_Z_j, vetor_C_j_menos_Z_j
-
-### Funcao calculo iteracoes
-def funcao_calculo_iteracoes(lista_todas_variaveis, coeficiente_base_tableau_C_j, lista_matriz_A, vetor_variaveis_C_B, vetor_coeficientes_C_B, lista_coef_b, coluna_pivo):
-    indice_coluna_pivo = lista_todas_variaveis.index(coluna_pivo) # lembrando que eh o valor da coluna que substitui o valor da fila
-    indice_fila_pivo = vetor_variaveis_C_B.index(coluna_pivo)
-    valor_pivo = lista_matriz_A[indice_fila_pivo][indice_coluna_pivo]
-    print('valor pivo',valor_pivo)
-    for j, elemento_fila in enumerate(lista_matriz_A[indice_fila_pivo]):
-        valor_pivo_substituir = float(elemento_fila / valor_pivo)
-        lista_matriz_A[indice_fila_pivo][j] = valor_pivo_substituir
-    lista_coef_b[indice_fila_pivo] = lista_coef_b[indice_fila_pivo] / valor_pivo
-    for i, fila_matriz in enumerate(lista_matriz_A):        
-        # Tratando matriz A
-        if i != indice_fila_pivo:
-            # print('fila matriz',fila_matriz)
-            valor_a_eliminar = fila_matriz[indice_coluna_pivo]
-            for j, elemento_fila in enumerate(fila_matriz):
-                valor_a_substituir_em_fila = (lista_matriz_A[indice_fila_pivo][j] * (-valor_a_eliminar) ) + lista_matriz_A[i][j]
-                lista_matriz_A[i][j] = valor_a_substituir_em_fila
-        # Tratando vetor b
-            valor_a_substituir_em_vetor_b = lista_coef_b[indice_fila_pivo] * (-valor_a_eliminar) + lista_coef_b[i] 
-            lista_coef_b[i] = valor_a_substituir_em_vetor_b
-    return lista_matriz_A, lista_coef_b, vetor_coeficientes_C_B
-
 ### Funcao valores C_j e vetor C_B
         # 1 Define-se os valores de todas as variaveis base do tableau C_j (consideram-se todas as variaveis) 
 def funcao_C_j_e_C_B(lista_todas_variaveis, lista_fo):
@@ -64,6 +26,44 @@ def funcao_C_j_e_C_B(lista_todas_variaveis, lista_fo):
             vetor_coeficientes_C_B.append(coeficiente_base_tableau_C_j[i])
     print('vetor_coeficientes_C_B: ', vetor_coeficientes_C_B)
     return coeficiente_base_tableau_C_j, vetor_variaveis_C_B, vetor_coeficientes_C_B
+
+### Funcao calculo iteracoes
+def funcao_calculo_iteracoes(lista_todas_variaveis, coeficiente_base_tableau_C_j, lista_matriz_A, vetor_variaveis_C_B, vetor_coeficientes_C_B, lista_coef_b, coluna_pivo):
+    indice_coluna_pivo = lista_todas_variaveis.index(coluna_pivo) # lembrando que eh o valor da coluna que substitui o valor da fila
+    indice_fila_pivo = vetor_variaveis_C_B.index(coluna_pivo)
+    valor_pivo = lista_matriz_A[indice_fila_pivo][indice_coluna_pivo]
+    print('valor pivo',valor_pivo)
+    for j, elemento_fila in enumerate(lista_matriz_A[indice_fila_pivo]):
+        valor_pivo_substituir = float(elemento_fila / valor_pivo)
+        lista_matriz_A[indice_fila_pivo][j] = valor_pivo_substituir
+    lista_coef_b[indice_fila_pivo] = lista_coef_b[indice_fila_pivo] / valor_pivo
+    for i, fila_matriz in enumerate(lista_matriz_A):        
+        # Tratando matriz A
+        if i != indice_fila_pivo:
+            # print('fila matriz',fila_matriz)
+            valor_a_eliminar = fila_matriz[indice_coluna_pivo]
+            for j, elemento_fila in enumerate(fila_matriz):
+                valor_a_substituir_em_fila = (lista_matriz_A[indice_fila_pivo][j] * (-valor_a_eliminar) ) + lista_matriz_A[i][j]
+                lista_matriz_A[i][j] = valor_a_substituir_em_fila
+        # Tratando vetor b
+            valor_a_substituir_em_vetor_b = lista_coef_b[indice_fila_pivo] * (-valor_a_eliminar) + lista_coef_b[i] 
+            lista_coef_b[i] = valor_a_substituir_em_vetor_b
+    return lista_matriz_A, lista_coef_b, vetor_coeficientes_C_B
+
+### Funcao para calculo de Z_j e Z_j-C_j
+def funcao_calculo_Z_j_e_Z_j_menos_C_j(lista_todas_variaveis, lista_matriz_A, coeficiente_base_tableau_C_j, vetor_coeficientes_C_B):
+    vetor_Z_j = []
+    vetor_C_j_menos_Z_j = []
+    for i, variavel in enumerate(lista_todas_variaveis):
+        Z = 0
+        for k, elemento in enumerate(vetor_coeficientes_C_B):
+            valor_A_j = lista_matriz_A[k][i] 
+            Z += elemento*valor_A_j
+        vetor_Z_j.append(Z)
+        C_j_menos_Z_j = 0    
+        C_j_menos_Z_j = coeficiente_base_tableau_C_j[i]-vetor_Z_j[i]
+        vetor_C_j_menos_Z_j.append(C_j_menos_Z_j)
+    return vetor_Z_j, vetor_C_j_menos_Z_j
 
 ### Funcao loop (while) até C_j menos Z_j ser <=0
 def funcao_loop_C_jmenosZ_j_ate_menor_a_0(lista_matriz_A, lista_todas_variaveis, vetor_variaveis_C_B, vetor_coeficientes_C_B, coeficiente_base_tableau_C_j, vetor_C_j_menos_Z_j, lista_coef_b):
