@@ -104,7 +104,6 @@ class Otimizador:
               Inicializa fase 1
               -------------------------
               -------------------------
-              
               ''')
         lista_todas_variaveis, lista_fo, lista_matriz_A, lista_coef_b = self._tratamento_dados(self.funcao_objetivo, self.restricoes)
         # Metodo Simplex caso fase 1
@@ -142,8 +141,7 @@ class Otimizador:
                'Lista f.o.:','\n',lista_nova_fo,'\n', 
                'Lista matriz A:','\n',lista_nova_A,'\n', 
                'Lista vetor b:','\n',lista_novo_b)
-        # Cria coeficientes C_j e o vetor e as variaveis C_B 
-        coeficiente_base_tableau_C_j, vetor_variaveis_C_B, vetor_coeficientes_C_B = algoritmo_simplex.funcao_C_j_e_C_B(lista_todas_variaveis, lista_nova_fo)
+
         ## AQUI DEVE COMECAR A FUNCAO PARA CALCULAR Z_j e C_j-Z_j
         vetor_Z_j, vetor_C_j_menos_Z_j = algoritmo_simplex.funcao_calculo_Z_j_e_Z_j_menos_C_j(lista_todas_variaveis, lista_nova_A, coeficiente_base_tableau_C_j, vetor_coeficientes_C_B)
         ## AQUI DEVE COMECAR O LOOP ATE C_j-Z_j <= 0
@@ -195,20 +193,20 @@ otimizacao_emilio = Otimizador()
 # otimizacao_emilio.simplex()
 
 # TESTE DO PROBLEMA DO GUT
-otimizacao_emilio.adicionar_funcao_objetivo('max. + 0.062x_1 + 0.074x_2')
-otimizacao_emilio.adicionar_restricao('+ 1x_1 + 1x_2 <= 10')
+# otimizacao_emilio.adicionar_funcao_objetivo('max. + 0.062x_1 + 0.074x_2')
+# otimizacao_emilio.adicionar_restricao('+ 1x_1 + 1x_2 <= 10')
 # otimizacao_emilio.adicionar_restricao('- 1x_1 + 0x_2 <= 0')
 # otimizacao_emilio.adicionar_restricao('+ 0x_1 - 1x_2 <= 0')
 # otimizacao_emilio.mostrar_problema()
-otimizacao_emilio.simplex() 
+# otimizacao_emilio.simplex() 
 
 # SOLUCIONAR PROBLEMA SIMPLEX COM RESULTADOS LP 
-# otimizacao_emilio.adicionar_funcao_objetivo('min. + 3000x_1 + 20000x_2 + 30000x_3 + 10000x_4 ')
-# otimizacao_emilio.adicionar_restricao('+ 20x_1 + 5x_2 + 10x_3 + 2x_4 <= 200')
-# otimizacao_emilio.adicionar_restricao('- 10x_1 - 20x_2 - 20x_3 - 14x_4 <= -80')
-# otimizacao_emilio.adicionar_restricao('+ 1x_1 + 1x_2 + 1x_3 + 1x_4  <= 20')
+otimizacao_emilio.adicionar_funcao_objetivo('min. + 3000x_1 + 20000x_2 + 30000x_3 + 10000x_4 ')
+otimizacao_emilio.adicionar_restricao('+ 1x_1 + 1x_2 + 1x_3 + 1x_4  == 20')
+otimizacao_emilio.adicionar_restricao('+ 20x_1 + 5x_2 + 10x_3 + 2x_4 <= 200')
+otimizacao_emilio.adicionar_restricao('+ 10x_1 + 20x_2 + 20x_3 + 15x_4 >= 80')
 # otimizacao_emilio.mostrar_problema()
-# otimizacao_emilio.simplex()
+otimizacao_emilio.simplex()
 
 # SOLUCIONAR PROBLEMA SIMPLEX COM RESULTADOS LP OBTIDOS PARA FASE 2
 # otimizacao_emilio.adicionar_funcao_objetivo('min. + 3000x_1 + 20000x_2 + 30000x_3 + 10000x_4 + 0x_5 + 0x_6')
