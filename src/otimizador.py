@@ -150,6 +150,7 @@ class Otimizador:
             for indices_eliminar in sorted(lista_indices_a, reverse=True):
                 lista_todas_variaveis.pop(indices_eliminar)
                 lista_nova_fo.pop(indices_eliminar)
+                vetor_C_j_menos_Z_j.pop(indices_eliminar)
                 for i, fila in enumerate(lista_nova_A):
                     fila.pop(indices_eliminar)
                     lista_nova_A[i] = fila
