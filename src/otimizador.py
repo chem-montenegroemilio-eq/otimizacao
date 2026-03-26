@@ -156,9 +156,9 @@ class Otimizador:
         print('Lista variaveis:','\n',lista_todas_variaveis,'\n',
                'Lista f.o.:','\n',lista_nova_fo,'\n', 
                'Lista matriz A:','\n',lista_nova_A,'\n', 
-               'Lista vetor b:','\n',lista_novo_b,
-                'vetor_variaveis_C_B', '\n',vetor_variaveis_C_B, ## APAGAR?
-                'vetor_variaveis_C_B', '\n',vetor_coeficientes_C_B, ## APAGAR? 
+               'Lista vetor b:','\n',lista_novo_b, '\n',
+                'vetor_variaveis_C_B', '\n',vetor_variaveis_C_B,'\n', ## APAGAR?
+                'vetor_variaveis_C_B', '\n',vetor_coeficientes_C_B,'\n', ## APAGAR? 
                 'vetor_C_j_menos_Z_j', '\n',vetor_C_j_menos_Z_j ## APAGAR?
                )
         # Aqui comeca o loop ate C_j-Z_j <= 0
