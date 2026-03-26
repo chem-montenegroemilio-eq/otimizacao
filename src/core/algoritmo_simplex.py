@@ -66,7 +66,14 @@ def funcao_calculo_Z_j_e_Z_j_menos_C_j(lista_todas_variaveis, lista_matriz_A, co
     return vetor_Z_j, vetor_C_j_menos_Z_j
 
 ### Funcao loop (while) até C_j menos Z_j ser <=0
-def funcao_loop_C_jmenosZ_j_ate_menor_a_0(lista_matriz_A, lista_todas_variaveis, vetor_variaveis_C_B, vetor_coeficientes_C_B, coeficiente_base_tableau_C_j, vetor_C_j_menos_Z_j, lista_coef_b):
+def funcao_loop_C_jmenosZ_j_ate_menor_a_0(
+        lista_matriz_A, 
+        lista_todas_variaveis, 
+        vetor_variaveis_C_B, 
+        vetor_coeficientes_C_B, 
+        coeficiente_base_tableau_C_j, 
+        vetor_C_j_menos_Z_j, 
+        lista_coef_b):
     lista_C_j_Z_j_evitar_infinito = []
     k=0
     while any(e > 0 for e in vetor_C_j_menos_Z_j):
@@ -156,4 +163,4 @@ def funcao_loop_C_jmenosZ_j_ate_menor_a_0(lista_matriz_A, lista_todas_variaveis,
     vetor_b:\n \t {''.join(str(lista_coef_b))}'''   
     [print(lista) for lista in lista_C_j_Z_j_evitar_infinito]
     print(texto_fim_loop)
-    return coeficiente_base_tableau_C_j, lista_matriz_A, lista_coef_b 
+    return lista_matriz_A, lista_coef_b, coeficiente_base_tableau_C_j, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j 
