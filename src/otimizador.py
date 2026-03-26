@@ -156,12 +156,25 @@ class Otimizador:
                     lista_nova_A[i] = fila
         print('Lista variaveis:','\n',lista_todas_variaveis,'\n',
                'Lista f.o.:','\n',lista_nova_fo,'\n', 
-               'Lista matriz A:','\n',lista_nova_A,'\n', 
-               'Lista vetor b:','\n',lista_novo_b, '\n',
+                'Lista matriz A:',f'\n {'\n'.join('\t' + str(linha) for linha in lista_nova_A)}', '\n',               'Lista vetor b:','\n',lista_novo_b, '\n',
                 'vetor_variaveis_C_B', '\n',vetor_variaveis_C_B,'\n', ## APAGAR?
                 'vetor_variaveis_C_B', '\n',vetor_coeficientes_C_B,'\n', ## APAGAR? 
                 'vetor_C_j_menos_Z_j', '\n',vetor_C_j_menos_Z_j ## APAGAR?
                )
+        
+        ### TESTE ### 
+        ### PRECISO RECALCULAR Z_j e Z_j_menos_C_j
+        print('\n\n')
+        vetor_Z_j, vetor_C_j_menos_Z_j = algoritmo_simplex.funcao_calculo_Z_j_e_Z_j_menos_C_j(lista_todas_variaveis, lista_nova_A, lista_nova_fo, vetor_coeficientes_C_B)
+        print('Lista variaveis:','\n',lista_todas_variaveis,'\n',
+        'Lista f.o.:','\n',lista_nova_fo,'\n', 
+        'Lista matriz A:',f'\n {'\n'.join('\t' + str(linha) for linha in lista_nova_A)}', 
+        'Lista vetor b:','\n',lista_novo_b, '\n',
+        'vetor_variaveis_C_B', '\n',vetor_variaveis_C_B,'\n', ## APAGAR?
+        'vetor_variaveis_C_B', '\n',vetor_coeficientes_C_B,'\n', ## APAGAR? 
+        'vetor_Z_j', '\n', vetor_Z_j,'\n', ## APAGAR?
+        'vetor_C_j_menos_Z_j', '\n',vetor_C_j_menos_Z_j ## APAGAR?
+        )
         # Aqui comeca o loop ate C_j-Z_j <= 0
         algoritmo_simplex.funcao_loop_C_jmenosZ_j_ate_menor_a_0(lista_nova_A, lista_todas_variaveis, vetor_variaveis_C_B, vetor_coeficientes_C_B, lista_nova_fo, vetor_C_j_menos_Z_j, lista_novo_b)
 
@@ -175,6 +188,7 @@ class Otimizador:
             self._calculo_simplex_fase1()
             # Obtem os valores atualizados para posterior calculo da fase 2  
             lista_todas_variaveis, lista_nova_A, lista_novo_b, lista_nova_fo, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j = self._calculo_simplex_fase1()
+            lista_nova_fo = [-item for item in lista_nova_fo]
             # Calculo da fase 2
             self._calculo_simplex_fase2(
         lista_todas_variaveis,  
@@ -197,13 +211,14 @@ otimizacao_emilio = Otimizador()
 # otimizacao_emilio.mostrar_restricoes()
 # otimizacao_emilio.simplex()
 
-# otimizacao_emilio.adicionar_funcao_objetivo('max. + 0x_1 +  0x_3 + 0x_2 + 0x_4 + 1x_5')
-# otimizacao_emilio.adicionar_restricao('+ 3000x_1  + 30000x_3 + 20000x_2 + 10000x_4 + 37777x_5 <= 137777')
-# otimizacao_emilio.adicionar_restricao('+ 1x_1 +  1x_3 + 1x_2 + 1x_4 + 5x_5 == 25')
-# otimizacao_emilio.adicionar_restricao('+ 20x_1 +  10x_3 + 5x_2 + 2x_4 + 250x_5 <= 500')
-# otimizacao_emilio.adicionar_restricao('+ 10x_1  + 20x_3 + 20x_2 +  15x_4 - 50x_5 >= 50')
-# otimizacao_emilio.adicionar_restricao('+ 0x_1  + 0x_3 + 0x_2 + 0x_4 + 1x_5 <= 1')
+otimizacao_emilio.adicionar_funcao_objetivo('max. + 0x_1 +  0x_3 + 0x_2 + 0x_4 + 1x_5')
+otimizacao_emilio.adicionar_restricao('+ 3000x_1  + 30000x_3 + 20000x_2 + 10000x_4 + 37777x_5 <= 137777')
+otimizacao_emilio.adicionar_restricao('+ 1x_1 +  1x_3 + 1x_2 + 1x_4 + 5x_5 == 25')
+otimizacao_emilio.adicionar_restricao('+ 20x_1 +  10x_3 + 5x_2 + 2x_4 + 250x_5 <= 500')
+otimizacao_emilio.adicionar_restricao('+ 10x_1  + 20x_3 + 20x_2 +  15x_4 - 50x_5 >= 50')
+otimizacao_emilio.adicionar_restricao('+ 0x_1  + 0x_3 + 0x_2 + 0x_4 + 1x_5 <= 1')
 # otimizacao_emilio.adicionar_restricao('+ 0x_1  + 0x_3  + 0x_2 + 0x_4 + 1x_5 >= 0')
+otimizacao_emilio.simplex()
 
 # otimizacao_emilio.mostrar_funcao_objetivo()
 # otimizacao_emilio.mostrar_restricoes()
@@ -229,12 +244,12 @@ otimizacao_emilio = Otimizador()
 # otimizacao_emilio.simplex() 
 
 # SOLUCIONAR PROBLEMA SIMPLEX COM RESULTADOS LP 
-otimizacao_emilio.adicionar_funcao_objetivo('min. + 3000x_1 + 20000x_2 + 30000x_3 + 10000x_4 ')
-otimizacao_emilio.adicionar_restricao('+ 1x_1 + 1x_2 + 1x_3 + 1x_4  == 20')
-otimizacao_emilio.adicionar_restricao('+ 20x_1 + 5x_2 + 10x_3 + 2x_4 <= 200')
-otimizacao_emilio.adicionar_restricao('+ 10x_1 + 20x_2 + 20x_3 + 15x_4 >= 80')
+# otimizacao_emilio.adicionar_funcao_objetivo('min. + 3000x_1 + 20000x_2 + 30000x_3 + 10000x_4 ')
+# otimizacao_emilio.adicionar_restricao('+ 1x_1 + 1x_2 + 1x_3 + 1x_4  == 20')
+# otimizacao_emilio.adicionar_restricao('+ 20x_1 + 5x_2 + 10x_3 + 2x_4 <= 200')
+# otimizacao_emilio.adicionar_restricao('+ 10x_1 + 20x_2 + 20x_3 + 15x_4 >= 80')
 # otimizacao_emilio.mostrar_problema()
-otimizacao_emilio.simplex()
+# otimizacao_emilio.simplex()
 
 # SOLUCIONAR PROBLEMA SIMPLEX COM RESULTADOS LP OBTIDOS PARA FASE 2
 # otimizacao_emilio.adicionar_funcao_objetivo('min. + 3000x_1 + 20000x_2 + 30000x_3 + 10000x_4 + 0x_5 + 0x_6')
