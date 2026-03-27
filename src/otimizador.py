@@ -120,7 +120,7 @@ class Otimizador:
         # Comeca a funcao para Z_j e C_j-Z_j
         vetor_Z_j, vetor_C_j_menos_Z_j = algoritmo_simplex.funcao_calculo_Z_j_e_Z_j_menos_C_j(lista_todas_variaveis, lista_matriz_A, coeficiente_base_tableau_C_j, vetor_coeficientes_C_B)
         # Comeca o loop ate C_j-Z_j <= 0
-        lista_nova_A, lista_novo_b, lista_nova_fo, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j = algoritmo_simplex.funcao_loop_C_jmenosZ_j_ate_menor_a_0(lista_matriz_A, lista_todas_variaveis, vetor_variaveis_C_B, vetor_coeficientes_C_B, coeficiente_base_tableau_C_j, vetor_C_j_menos_Z_j, lista_coef_b)
+        lista_nova_A, lista_novo_b, lista_nova_fo, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j = algoritmo_simplex.funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(lista_matriz_A, lista_todas_variaveis, vetor_variaveis_C_B, vetor_coeficientes_C_B, coeficiente_base_tableau_C_j, vetor_C_j_menos_Z_j, lista_coef_b)
         return lista_todas_variaveis, lista_nova_A, lista_novo_b, lista_nova_fo, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j
     
 
@@ -176,7 +176,7 @@ class Otimizador:
         'vetor_C_j_menos_Z_j', '\n',vetor_C_j_menos_Z_j ## APAGAR?
         )
         # Aqui comeca o loop ate C_j-Z_j <= 0
-        algoritmo_simplex.funcao_loop_C_jmenosZ_j_ate_menor_a_0(lista_nova_A, lista_todas_variaveis, vetor_variaveis_C_B, vetor_coeficientes_C_B, lista_nova_fo, vetor_C_j_menos_Z_j, lista_novo_b)
+        algoritmo_simplex.funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(lista_nova_A, lista_todas_variaveis, vetor_variaveis_C_B, vetor_coeficientes_C_B, lista_nova_fo, vetor_C_j_menos_Z_j, lista_novo_b)
 
 
     def simplex(self):
