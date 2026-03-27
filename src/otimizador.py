@@ -45,7 +45,7 @@ class Otimizador:
         # Define-se a f.o.: min. ou max. e separa do string da equacao
         substituir_ponto = funcao_objetivo.find('.')
         funcao_objetivo = funcao_objetivo[:substituir_ponto] + '|' + funcao_objetivo[substituir_ponto+1:]
-        fo_min_max, fo_equacao = funcao_objetivo.split('|')
+        self.fo_min_max, fo_equacao = funcao_objetivo.split('|')
         fo_equacao.replace(' ', '')
         # Obtem-se variaveis e coeficientes separados numa funcao
         dicionario_fo =  parser.funcao_coef_variaveis(fo_equacao)
@@ -60,22 +60,22 @@ class Otimizador:
             for chave in lista_chaves:
                 if chave not in lista_todas_variaveis:
                     lista_todas_variaveis.append(chave)
+        self.lista_todas_variaveis == lista_todas_variaveis[:]
         # Organizar cada restricao em forma de vetor, adicionando os zeros (0s) caso nao haja coeficiente
-        lista_matriz_A = parser.funcao_conversao_dicionario_restricao_em_lista_restricao(tupla_restricoes, lista_todas_variaveis)
+        lista_matriz_A = parser.funcao_conversao_dicionario_restricao_em_lista_restricao(tupla_restricoes, self.lista_todas_variaveis)
         # Printar funcao objetivo, restricoes, e vetor b    
         lista_coef_b = list(tupla_coef_b)
-        lista_fo = parser.funcao_conversao_dicionario_funcaoobjetivo_em_lista_funcaoobjetivo(dicionario_fo, lista_todas_variaveis)
-        # Retorna saidas para serem utilizas em outros metodos
-        return lista_todas_variaveis, lista_fo, lista_matriz_A, lista_coef_b
+        self.lista_fo = parser.funcao_conversao_dicionario_funcaoobjetivo_em_lista_funcaoobjetivo(dicionario_fo, self.lista_todas_variaveis)
+        return lista_matriz_A, lista_coef_b
 
 
     def mostrar_problema(self):
         """Apresenta o problema em listas, na sua forma vetorial e matricial"""
         print('O problema tem a seguinte forma vetorial e matricial.')
-        lista_todas_variaveis, lista_fo, lista_matriz_A, lista_coef_b = self._tratamento_dados(self.funcao_objetivo, self.restricoes)
+        lista_matriz_A, lista_coef_b = self._tratamento_dados(self.funcao_objetivo, self.restricoes)
         print(
-            'VARIAVEIS:', lista_todas_variaveis,
-            '\nVETOR FUNÇÃO OBJETIVO:', lista_fo,
+            'VARIAVEIS:', self.lista_todas_variaveis,
+            '\nVETOR FUNÇÃO OBJETIVO:', self.lista_fo,
             '\nMATRIZ A:\n' + '\n'.join( '\t'+str(linha) for linha in lista_matriz_A),
             '\nVETOR b:\n' + ''.join(str(lista_coef_b))
             )
@@ -95,9 +95,7 @@ class Otimizador:
 
     def _determinador(self):
         """Baseado nas variaveis artificiais, determina se precisa passar pela fase 1 (True) ou nao (False)."""
-        lista_todas_variaveis, lista_fo, lista_matriz_A, lista_coef_b = self._tratamento_dados(self.funcao_objetivo, self.restricoes)
-        # Determinando fase 1
-        fase1_true_fase2_false = determinador_fase.funcao_caso_haja_variaveis_artificias(lista_todas_variaveis)
+        fase1_true_fase2_false = determinador_fase.funcao_caso_haja_variaveis_artificias(self.lista_todas_variaveis)
         if fase1_true_fase2_false == True:
             return True
         else:
@@ -114,13 +112,17 @@ class Otimizador:
               -------------------------
               ''')
         # Trata os dados para converter string em vetores e matrices
-        lista_todas_variaveis, lista_fo, lista_matriz_A, lista_coef_b = self._tratamento_dados(self.funcao_objetivo, self.restricoes)
+        lista_matriz_A, lista_coef_b = self._tratamento_dados(self.funcao_objetivo, self.restricoes)
         # Define os coeficientes e valores C_j e C_B
-        coeficiente_base_tableau_C_j, vetor_variaveis_C_B, vetor_coeficientes_C_B = algoritmo_simplex.funcao_C_j_e_C_B(lista_todas_variaveis, lista_fo)
+        coeficiente_base_tableau_C_j, vetor_variaveis_C_B, vetor_coeficientes_C_B = algoritmo_simplex.funcao_C_j_e_C_B(self.lista_todas_variaveis, self.lista_fo)
         # Comeca a funcao para Z_j e C_j-Z_j
-        vetor_Z_j, vetor_C_j_menos_Z_j = algoritmo_simplex.funcao_calculo_Z_j_e_Z_j_menos_C_j(lista_todas_variaveis, lista_matriz_A, coeficiente_base_tableau_C_j, vetor_coeficientes_C_B)
-        # Comeca o loop ate C_j-Z_j <= 0
-        lista_nova_A, lista_novo_b, lista_nova_fo, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j = algoritmo_simplex.funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(lista_matriz_A, lista_todas_variaveis, vetor_variaveis_C_B, vetor_coeficientes_C_B, coeficiente_base_tableau_C_j, vetor_C_j_menos_Z_j, lista_coef_b)
+        vetor_Z_j, vetor_C_j_menos_Z_j = algoritmo_simplex.funcao_calculo_Z_j_e_Z_j_menos_C_j(self.lista_todas_variaveis, lista_matriz_A, coeficiente_base_tableau_C_j, vetor_coeficientes_C_B)
+        # Comeca o loop ate C_j-Z_j. <= 0 caso max. >=0 caso min.
+        if 'max' in self.fo_min_max:
+            lista_nova_A, lista_novo_b, lista_nova_fo, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j = algoritmo_simplex.funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(lista_matriz_A, lista_todas_variaveis, vetor_variaveis_C_B, vetor_coeficientes_C_B, coeficiente_base_tableau_C_j, vetor_C_j_menos_Z_j, lista_coef_b)
+        else:
+            print('CRIAR FUNCAO PARA MIN.')
+            pass ### AQUI COLOCAR A OPCAO DE min.
         return lista_todas_variaveis, lista_nova_A, lista_novo_b, lista_nova_fo, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j
     
 
@@ -138,10 +140,9 @@ class Otimizador:
               Inicializa fase 2
               -------------------------
               -------------------------
-              ''')
-        # Para encontrar variaveis artificiais
-        lista_indices_a = []
+              ''') 
         # Encontra indices de 'a' que precisam ser elimados nas colunas das lista (tanto em vetores quanto em matrices)
+        lista_indices_a = []
         if any('a' in item for item in lista_todas_variaveis):
             for i, item in enumerate(lista_todas_variaveis):
                 if 'a' in item:
@@ -154,6 +155,19 @@ class Otimizador:
                 for i, fila in enumerate(lista_nova_A):
                     fila.pop(indices_eliminar)
                     lista_nova_A[i] = fila
+        
+
+        # Resolve para o caso que somente haja variaveis tipo 's'
+        else:
+            algoritmo_simplex.funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
+                lista_nova_A, 
+                lista_todas_variaveis, 
+                vetor_variaveis_C_B, 
+                vetor_coeficientes_C_B, 
+                lista_nova_fo, #-> coeficiente_base_tableau_C_j
+                vetor_C_j_menos_Z_j, 
+                lista_novo_b)
+            
         print('Lista variaveis:','\n',lista_todas_variaveis,'\n',
                'Lista f.o.:','\n',lista_nova_fo,'\n', 
                 'Lista matriz A:',f'\n {'\n'.join('\t' + str(linha) for linha in lista_nova_A)}', '\n',               'Lista vetor b:','\n',lista_novo_b, '\n',
@@ -162,21 +176,9 @@ class Otimizador:
                 'vetor_C_j_menos_Z_j', '\n',vetor_C_j_menos_Z_j ## APAGAR?
                )
         
-        ### TESTE ### 
-        ### PRECISO RECALCULAR Z_j e Z_j_menos_C_j
-        print('\n\n')
-        vetor_Z_j, vetor_C_j_menos_Z_j = algoritmo_simplex.funcao_calculo_Z_j_e_Z_j_menos_C_j(lista_todas_variaveis, lista_nova_A, lista_nova_fo, vetor_coeficientes_C_B)
-        print('Lista variaveis:','\n',lista_todas_variaveis,'\n',
-        'Lista f.o.:','\n',lista_nova_fo,'\n', 
-        'Lista matriz A:',f'\n {'\n'.join('\t' + str(linha) for linha in lista_nova_A)}', 
-        'Lista vetor b:','\n',lista_novo_b, '\n',
-        'vetor_variaveis_C_B', '\n',vetor_variaveis_C_B,'\n', ## APAGAR?
-        'vetor_variaveis_C_B', '\n',vetor_coeficientes_C_B,'\n', ## APAGAR? 
-        'vetor_Z_j', '\n', vetor_Z_j,'\n', ## APAGAR?
-        'vetor_C_j_menos_Z_j', '\n',vetor_C_j_menos_Z_j ## APAGAR?
-        )
-        # Aqui comeca o loop ate C_j-Z_j <= 0
-        algoritmo_simplex.funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(lista_nova_A, lista_todas_variaveis, vetor_variaveis_C_B, vetor_coeficientes_C_B, lista_nova_fo, vetor_C_j_menos_Z_j, lista_novo_b)
+
+
+
 
 
     def simplex(self):
@@ -188,22 +190,19 @@ class Otimizador:
             self._calculo_simplex_fase1()
             # Obtem os valores atualizados para posterior calculo da fase 2  
             lista_todas_variaveis, lista_nova_A, lista_novo_b, lista_nova_fo, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j = self._calculo_simplex_fase1()
-            lista_nova_fo = [-item for item in lista_nova_fo]
             # Calculo da fase 2
             self._calculo_simplex_fase2(
-        lista_todas_variaveis,  
-        lista_nova_A, 
-        lista_novo_b, 
-        lista_nova_fo, # -> coeficiente_base_tableau_C_j
-        vetor_variaveis_C_B, 
-        vetor_coeficientes_C_B, 
-        vetor_C_j_menos_Z_j)
+                lista_todas_variaveis,  
+                lista_nova_A, 
+                lista_novo_b, 
+                lista_nova_fo, # -> coeficiente_base_tableau_C_j
+                vetor_variaveis_C_B, 
+                vetor_coeficientes_C_B, 
+                vetor_C_j_menos_Z_j)
         ## Caso possua somente variaveis de folga (tipo <=)
         else:     
             print('---\n---\nO problema precisa ser resolvido apenas pela Fase 2.\n---\n---')    
-        ### RESOLVER! AQUI ESTA O PROBLEMA PARA O CASO EM QUE NAO HAJA fase 1, PORQUE NAO INICIO COM C_B, C_j.
-            # lista_todas_variaveis, lista_fo, lista_matriz_A, lista_coef_b = self._tratamento_dados(self.funcao_objetivo, self.restricoes) 
-            # self._calculo_simplex_fase2(lista_todas_variaveis, lista_fo, lista_matriz_A, lista_coef_b, coeficiente_base_tableau_C_j, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j)
+
 
 # Programa
 otimizacao_emilio = Otimizador()

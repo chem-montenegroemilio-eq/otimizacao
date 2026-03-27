@@ -9,7 +9,6 @@ def funcao_coef_variaveis(string_equacao):
             lista_sinal_coeficientes.append(elemento)
         if elemento == '-':
             lista_sinal_coeficientes.append(elemento)
-    
     # isto esta ok, e consiste em tirar os coeficientes e que a mesma dimensao da lista dos sinais concida com os coeficientes
     novo_string = string_equacao
     for i in range(1,100):
@@ -21,7 +20,6 @@ def funcao_coef_variaveis(string_equacao):
         lista_coeficiente.remove('')
     elif ' ' in lista_coeficiente:
         lista_coeficiente.remove(' ')        
-    
     # aqui separa pelos segmentos que contem coeficientes e x_ ou s_ ou e_
     separando_equacao = string_equacao.replace('-', '+').split('+')
     if '' in separando_equacao:
@@ -29,9 +27,7 @@ def funcao_coef_variaveis(string_equacao):
     elif ' ' in separando_equacao:
         separando_equacao.remove(' ')
     dicionario_c={}
-
     # se utiliza a separacao em partes para criar um dicionario que outorgue coeficientes as respectivas variaveis 
-    # print('teste', separando_equacao)
     for i, elemento in enumerate(separando_equacao):
         if 'x' in elemento:
             coeficiente, variavel = elemento.split('x')
@@ -45,7 +41,6 @@ def funcao_coef_variaveis(string_equacao):
         elif 'a' in elemento:
             coeficiente, variavel = elemento.split('a')
             dicionario_c[f'a{variavel.strip()}'] = float(f'{lista_sinal_coeficientes[i]}{coeficiente.strip()}')
-        
     return dicionario_c
 
 ### Funcao para criar matriz de restricoes A, considerando variaveis folga, excedentes, e artificiais
@@ -58,14 +53,12 @@ def matriz_restricoes(lista_restricoes):
         if '<=' in restricao:
             equacao_restricao, coef_b = restricao.split('<=') 
             equacao_restricao = equacao_restricao + f'+ 1s_{i}'
-        
         # caso >=, entao adicionar e_i (variavel excedente) e tambem a_i (variavel artificial)
         elif '>=' in restricao:
             equacao_restricao, coef_b = restricao.split('>=')
             equacao_restricao = equacao_restricao + f'- 1e_{i} '
             i += 1
             equacao_restricao = equacao_restricao + f'+ 1a_{i} '
-        
         # caso ==, entao adicionar a_i
         elif '==' in restricao:
             equacao_restricao, coef_b = restricao.split('==')
@@ -76,7 +69,6 @@ def matriz_restricoes(lista_restricoes):
         tupla_coef_b += (float(coef_b.strip()), )
         
         i += 1
-    
     return tupla_matriz_A, tupla_coef_b
 
 ### Funcao conversao dicionario de restricao em lista de restricoes
