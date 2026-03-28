@@ -129,8 +129,6 @@ class Otimizador:
                 vetor_C_j_menos_Z_j
                 )
         else:
-            coeficiente_base_tableau_C_j = [-item for item in coeficiente_base_tableau_C_j]
-            print('TESTE!!', coeficiente_base_tableau_C_j)
             lista_nova_A, lista_novo_b, lista_fo, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j = algoritmo_simplex.funcao_minimizar_loop_C_jmenosZ_j_ate_maior_a_0(
                 self.lista_todas_variaveis, 
                 coeficiente_base_tableau_C_j, # coeficientes do vetor c^{T}_{j}

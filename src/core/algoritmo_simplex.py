@@ -1,5 +1,6 @@
 ### Funcao que calcula a razao entre a coluna pivo e o seu correspondente b (vetor_b ou lista_coef_b) sendo b_{i}/A_{i,coluna_pivo} somente para valores>0. Valores<0 sao definidos como '0'.
 def calculo_vetor_razao(lista_matriz_A, lista_coef_b, indice_maior_valor_C_j_Z_j, vetor_variaveis_C_B): 
+    print('TESTEE',indice_maior_valor_C_j_Z_j, '\n', lista_matriz_A, '\n', lista_coef_b)
     vetor_razao = []
     for i, dividendo in enumerate(lista_coef_b):
         divisor = lista_matriz_A[i][indice_maior_valor_C_j_Z_j]
@@ -15,6 +16,7 @@ def calculo_vetor_razao(lista_matriz_A, lista_coef_b, indice_maior_valor_C_j_Z_j
     vetor_razao_sem0 = vetor_razao[:] # cria uma copia da lista_razao_sem0 principal
     fun_valores_diferentes_de_zero = lambda x: x != 0 # considera somente valores diferentes de zero
     vetor_razao_sem0 = list(filter(fun_valores_diferentes_de_zero, vetor_razao))
+    print("TESTE", vetor_razao)
     menor_valor_razao = min(vetor_razao_sem0)    
     indice_menor_valor_razao = vetor_razao.index(menor_valor_razao)
     fila_pivo =  vetor_variaveis_C_B[indice_menor_valor_razao] 
@@ -35,16 +37,16 @@ def atualizacao_coef_vetor_C_B(lista_todas_variaveis, coeficiente_base_tableau_C
 ### Funcao valores C_j e vetor C_B
 # 1 Define-se os valores de todas as variaveis base do tableau C_j (consideram-se todas as variaveis) 
 def funcao_C_j_e_C_B(definir_min_max, lista_todas_variaveis, lista_fo):
-    M = 100
+    M = 100000000
     coeficiente_base_tableau_C_j = []
     for i, variavel in enumerate(lista_todas_variaveis):
         if 'x' in variavel:
             coeficiente_base_tableau_C_j.append(lista_fo[i])
         elif 'a' in variavel:
             if 'max' in definir_min_max:
-                coeficiente_base_tableau_C_j.append(M)
-            else:
                 coeficiente_base_tableau_C_j.append(-M)
+            else:
+                coeficiente_base_tableau_C_j.append(M)
         else:
             coeficiente_base_tableau_C_j.append(0)
     print('coeficiente_base_tableau_C_j: ', coeficiente_base_tableau_C_j)
@@ -60,7 +62,7 @@ def funcao_C_j_e_C_B(definir_min_max, lista_todas_variaveis, lista_fo):
     vetor_coeficientes_C_B = []
     for i, variavel in enumerate(lista_todas_variaveis):
         if variavel in vetor_variaveis_C_B:
-            vetor_coeficientes_C_B.append(-coeficiente_base_tableau_C_j[i])
+            vetor_coeficientes_C_B.append(coeficiente_base_tableau_C_j[i])
     print('vetor_coeficientes_C_B: ', vetor_coeficientes_C_B)
     return coeficiente_base_tableau_C_j, vetor_variaveis_C_B, vetor_coeficientes_C_B
 
@@ -227,6 +229,7 @@ def funcao_minimizar_loop_C_jmenosZ_j_ate_maior_a_0(
         coluna_pivo = lista_todas_variaveis[indice_menor_valor_C_j_Z_j]
 # 2 Obtencao do vetor razao e consequentemente fila pivo 
         print('COLUNA PIVO', coluna_pivo)
+        print('TESTE antes de achar minimo:', vetor_C_j_menos_Z_j, '\n',indice_menor_valor_C_j_Z_j)
         vetor_razao, menor_valor_razao, fila_pivo = calculo_vetor_razao(lista_matriz_A, lista_coef_b, indice_menor_valor_C_j_Z_j, vetor_variaveis_C_B)
         print('vetor_razao', vetor_razao)
         print('menor_valor_razao:', menor_valor_razao)
@@ -248,7 +251,7 @@ def funcao_minimizar_loop_C_jmenosZ_j_ate_maior_a_0(
             vetor_coeficientes_C_B, 
             coluna_pivo
             )
-        print('TESTEEE:', vetor_coeficientes_C_B)
+        print('TESTEEE coef CB:', vetor_coeficientes_C_B)
         print('matriz A tratada:\n' + '\n'.join('\t'+str(fila) for fila in lista_matriz_A))
         print('vetor_b tratado:\n \t' + ''.join(str(lista_coef_b)))    
         print('\n     # Inicia calculo Z_j_e_Z_j_menos_C_j')
@@ -272,7 +275,7 @@ def funcao_minimizar_loop_C_jmenosZ_j_ate_maior_a_0(
     -------------------------------------------------------
     -------------------------------------------------------
     Fim do loop:
-    otimo da fo: {-otimo_fo}
+    otimo da fo: {otimo_fo}
     valores f.o. fase1: {coeficiente_base_tableau_C_j}
     matriz_A:\n {'\n'.join( '\t' + str(linha) for linha in lista_matriz_A)}
     vetor_b:\n \t {''.join(str(lista_coef_b))}
