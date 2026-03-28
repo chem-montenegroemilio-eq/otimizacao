@@ -150,7 +150,8 @@ class Otimizador:
         lista_nova_fo, # -> coeficiente_base_tableau_C_j
         vetor_variaveis_C_B, 
         vetor_coeficientes_C_B, 
-        vetor_C_j_menos_Z_j):
+        vetor_C_j_menos_Z_j
+        ):
         print('''
               -------------------------
               -------------------------
@@ -158,6 +159,9 @@ class Otimizador:
               -------------------------
               -------------------------
               ''') 
+        # Recalculando vetor Z_j e C_j-Z_j
+        vetor_Z_j, vetor_C_j_menos_Z_j = algoritmo_simplex.funcao_calculo_Z_j_e_Z_j_menos_C_j(self.lista_todas_variaveis, lista_nova_A, lista_nova_fo, vetor_coeficientes_C_B)
+        print("MAIS UM TESTE", vetor_C_j_menos_Z_j)
         # Encontra indices de 'a' que precisam ser elimados nas colunas das lista (tanto em vetores quanto em matrices)
         lista_indices_a = []
         if any('a' in item for item in self.lista_todas_variaveis):
@@ -172,18 +176,43 @@ class Otimizador:
                 for i, fila in enumerate(lista_nova_A):
                     fila.pop(indices_eliminar)
                     lista_nova_A[i] = fila
-        
-
+            if 'min' in self.fo_min_max:
+                algoritmo_simplex.funcao_minimizar_loop_C_jmenosZ_j_ate_maior_a_0(
+                    self.lista_todas_variaveis,
+                    lista_nova_fo, #-> coeficiente_base_tableau_C_j
+                    lista_nova_A, 
+                    lista_novo_b, 
+                    vetor_variaveis_C_B, 
+                    vetor_coeficientes_C_B, 
+                    vetor_C_j_menos_Z_j, 
+                    )
+            else:
+                algoritmo_simplex.funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
+                    self.lista_todas_variaveis,
+                    lista_nova_A, 
+                    vetor_variaveis_C_B, 
+                    vetor_coeficientes_C_B, 
+                    lista_nova_fo, #-> coeficiente_base_tableau_C_j
+                    vetor_C_j_menos_Z_j, 
+                    lista_novo_b)
         # Resolve para o caso que somente haja variaveis tipo 's'
         else:
-            algoritmo_simplex.funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
-                lista_nova_A, 
-                vetor_variaveis_C_B, 
-                vetor_coeficientes_C_B, 
-                lista_nova_fo, #-> coeficiente_base_tableau_C_j
-                vetor_C_j_menos_Z_j, 
-                lista_novo_b)
-            
+            if 'min' in self.fo_min_max:
+                algoritmo_simplex.funcao_minimizar_loop_C_jmenosZ_j_ate_maior_a_0(
+                    lista_nova_A, 
+                    vetor_variaveis_C_B, 
+                    vetor_coeficientes_C_B, 
+                    lista_nova_fo, #-> coeficiente_base_tableau_C_j
+                    vetor_C_j_menos_Z_j, 
+                    lista_novo_b)
+            else:
+                algoritmo_simplex.funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
+                    lista_nova_A, 
+                    vetor_variaveis_C_B, 
+                    vetor_coeficientes_C_B, 
+                    lista_nova_fo, #-> coeficiente_base_tableau_C_j
+                    vetor_C_j_menos_Z_j, 
+                    lista_novo_b)            
         print('Lista variaveis:','\n',self.lista_todas_variaveis,'\n',
                'Lista f.o.:','\n',lista_nova_fo,'\n', 
                 'Lista matriz A:',f'\n {'\n'.join('\t' + str(linha) for linha in lista_nova_A)}', '\n',               'Lista vetor b:','\n',lista_novo_b, '\n',
@@ -207,10 +236,9 @@ class Otimizador:
             # Realiza o simplex para dar as respostas da fase 1
             self._calculo_simplex_fase1()
             # Obtem os valores atualizados para posterior calculo da fase 2  
-            self.lista_todas_variaveis, lista_nova_A, lista_novo_b, lista_nova_fo, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j = self._calculo_simplex_fase1()
+            lista_nova_A, lista_novo_b, lista_nova_fo, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j = self._calculo_simplex_fase1()
             # Calculo da fase 2
             self._calculo_simplex_fase2(
-                self.lista_todas_variaveis,  
                 lista_nova_A, 
                 lista_novo_b, 
                 lista_nova_fo, # -> coeficiente_base_tableau_C_j

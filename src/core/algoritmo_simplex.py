@@ -199,7 +199,7 @@ def funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
 ### Funcao loop minimizar (while) até C_j menos Z_j ser >=0
 def funcao_minimizar_loop_C_jmenosZ_j_ate_maior_a_0(
         lista_todas_variaveis,
-        coeficiente_base_tableau_C_j,
+        coeficiente_base_tableau_C_j, #-> coeficiente da fo
         lista_matriz_A, 
         lista_coef_b, 
         vetor_variaveis_C_B, 
@@ -209,6 +209,7 @@ def funcao_minimizar_loop_C_jmenosZ_j_ate_maior_a_0(
     lista_C_j_Z_j_evitar_infinito = []
     k=0
 # 1 Condicional que precisa todos os valores de C_j_menos_Z_j ser <= 0 para parar (otimizacao tipo maximizacao)
+    print('vetor C_j_menos_Z_j', vetor_C_j_menos_Z_j)
     while any(e < 0 for e in vetor_C_j_menos_Z_j):
         print('-------------------------------------------------------------------------------------')
         print(f'# Inicia loop n°{k+1}')
@@ -246,14 +247,8 @@ def funcao_minimizar_loop_C_jmenosZ_j_ate_maior_a_0(
             vetor_variaveis_C_B, 
             vetor_coeficientes_C_B, 
             coluna_pivo
-            # lista_todas_variaveis, 
-            # coeficiente_base_tableau_C_j, 
-            # lista_matriz_A, 
-            # vetor_variaveis_C_B, 
-            # vetor_coeficientes_C_B, 
-            # lista_coef_b,
-            # coluna_pivo
             )
+        print('TESTEEE:', vetor_coeficientes_C_B)
         print('matriz A tratada:\n' + '\n'.join('\t'+str(fila) for fila in lista_matriz_A))
         print('vetor_b tratado:\n \t' + ''.join(str(lista_coef_b)))    
         print('\n     # Inicia calculo Z_j_e_Z_j_menos_C_j')
@@ -263,12 +258,16 @@ def funcao_minimizar_loop_C_jmenosZ_j_ate_maior_a_0(
             lista_matriz_A, 
             coeficiente_base_tableau_C_j, 
             vetor_coeficientes_C_B)
+        print('OUTRO TESTE',vetor_Z_j)
         print('vetor_C_j_menos_Z_j', vetor_C_j_menos_Z_j)
         if k==10: # !!??? nao lembro por que fiz isto
             break
         k+=1
 # 5 Calcula otimo da f.o.= c_{j}*x_{j}
+    print(lista_coef_b)
+    print(vetor_coeficientes_C_B)
     otimo_fo = sum(lista_coef_b[i]*elemento_C_B for i, elemento_C_B in enumerate(vetor_coeficientes_C_B) )
+    # print('OUTRO TESTE',vetor_Z_j)
     texto_fim_loop = f'''
     -------------------------------------------------------
     -------------------------------------------------------
@@ -279,7 +278,6 @@ def funcao_minimizar_loop_C_jmenosZ_j_ate_maior_a_0(
     vetor_b:\n \t {''.join(str(lista_coef_b))}
     vetor_variaveis_C_B: {''.join(str(vetor_variaveis_C_B))} ## APAGAR?
     vetor_variaveis_C_B: {''.join(str(vetor_coeficientes_C_B))} ## APAGAR? 
-    vetor_Z_j: {''.join(str(vetor_Z_j))} ## APAGAR?
     vetor_C_j_menos_Z_j: {''.join(str(vetor_C_j_menos_Z_j))} ## APAGAR? '''
     [print(lista) for lista in lista_C_j_Z_j_evitar_infinito]
     print(texto_fim_loop)
