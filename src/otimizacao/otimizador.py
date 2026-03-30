@@ -126,7 +126,8 @@ class Otimizador:
                 lista_coef_b,
                 vetor_variaveis_C_B, 
                 vetor_coeficientes_C_B, 
-                vetor_C_j_menos_Z_j
+                vetor_C_j_menos_Z_j,
+                self.calculo_visivel,
                 )
         else:
             lista_nova_A, lista_novo_b, lista_fo, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j = algoritmo_simplex.funcao_minimizar_loop_C_jmenosZ_j_ate_maior_a_0(
@@ -136,7 +137,8 @@ class Otimizador:
                 lista_coef_b,
                 vetor_variaveis_C_B, 
                 vetor_coeficientes_C_B, 
-                vetor_C_j_menos_Z_j
+                vetor_C_j_menos_Z_j,
+                self.calculo_visivel,
                 )
         return lista_nova_A, lista_novo_b, lista_fo, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j
     
@@ -148,7 +150,8 @@ class Otimizador:
         lista_nova_fo, # -> coeficiente_base_tableau_C_j
         vetor_variaveis_C_B, 
         vetor_coeficientes_C_B, 
-        vetor_C_j_menos_Z_j
+        vetor_C_j_menos_Z_j,
+        calculo_visivel,
         ):
         print('''
               -------------------------
@@ -182,7 +185,8 @@ class Otimizador:
                     lista_novo_b, 
                     vetor_variaveis_C_B, 
                     vetor_coeficientes_C_B, 
-                    vetor_C_j_menos_Z_j, 
+                    vetor_C_j_menos_Z_j,
+                    calculo_visivel 
                     )
             else:
                 algoritmo_simplex.funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
@@ -192,7 +196,8 @@ class Otimizador:
                     lista_novo_b, 
                     vetor_variaveis_C_B, 
                     vetor_coeficientes_C_B, 
-                    vetor_C_j_menos_Z_j, 
+                    vetor_C_j_menos_Z_j,
+                    calculo_visivel 
                     )
         # Resolve para o caso que somente haja variaveis tipo 's'
         else:
@@ -204,7 +209,8 @@ class Otimizador:
                     lista_novo_b, 
                     vetor_variaveis_C_B, 
                     vetor_coeficientes_C_B, 
-                    vetor_C_j_menos_Z_j, 
+                    vetor_C_j_menos_Z_j,
+                    self.calculo_visivel 
                     )
             else:
                 algoritmo_simplex.funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
@@ -215,12 +221,15 @@ class Otimizador:
                     vetor_variaveis_C_B, 
                     vetor_coeficientes_C_B, 
                     vetor_C_j_menos_Z_j, 
+                    self.calculo_visivel,
                     )            
 
 
-    def simplex(self):
+    def simplex(self, calculo_visivel=True):
         """Determina a fase e retorna os valores resolvidos pelo metodo simplex."""
         self._tratamento_dados(self.funcao_objetivo, self.restricoes)
+        # Para exibir os calculos
+        self.calculo_visivel = calculo_visivel
         # print(self.__dict__)
         ## Caso possua variaveis artificias (tipo == e/ou >=)
         if self._determinador() == True:      
@@ -234,7 +243,9 @@ class Otimizador:
                 lista_nova_fo, # -> coeficiente_base_tableau_C_j
                 vetor_variaveis_C_B, 
                 vetor_coeficientes_C_B, 
-                vetor_C_j_menos_Z_j)
+                vetor_C_j_menos_Z_j,
+                self.calculo_visivel,
+                )
         ## Caso possua somente variaveis de folga (tipo <=)
         else:     
             print('---\n---\nO problema precisa ser resolvido apenas pela Fase 2.\n---\n---')    
@@ -248,5 +259,6 @@ class Otimizador:
                 coeficientes_fo, # -> coeficiente_base_tableau_C_j
                 vetor_variaveis_C_B, 
                 vetor_coeficientes_C_B, 
-                vetor_C_j_menos_Z_j
+                vetor_C_j_menos_Z_j,
+                self.calculo_visivel,
                 )

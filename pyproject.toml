@@ -5,13 +5,17 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "otimizacao"
 version = "0.1.0"
-description = "Biblioteca de otimizacao de facil uso e didatica em PT-BR."
+description = "Biblioteca de otimizacao de facil uso e didatica em PT-BR"
 readme = "README.md"
 requires-python = ">=3.10"
+
 authors = [
-    {name = "Emilio Fernando Montenegro Alvarado"}
+  { name = "Emilio Fernando Montenegro Alvarado", email = "chem.montenegro.eq@gmail.com" }
 ]
-dependencies=[]
+
+dependencies = []
+
+license = { text = "AGPL-3.0" }
 
 [tool.setuptools]
 package-dir = {"" = "src"}
