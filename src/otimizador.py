@@ -138,7 +138,6 @@ class Otimizador:
                 vetor_coeficientes_C_B, 
                 vetor_C_j_menos_Z_j
                 )
-            # lista_nova_A, lista_novo_b, lista_nova_fo, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j = algoritmo_simplex.funcao_minimizar_loop_C_jmenosZ_j_ate_maior_a_0(lista_matriz_A, self.lista_todas_variaveis, vetor_variaveis_C_B, vetor_coeficientes_C_B, coeficiente_base_tableau_C_j, vetor_C_j_menos_Z_j, lista_coef_b)
         return lista_nova_A, lista_novo_b, lista_fo, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j
     
 
@@ -159,7 +158,6 @@ class Otimizador:
               ''') 
         # Recalculando vetor Z_j e C_j-Z_j
         vetor_Z_j, vetor_C_j_menos_Z_j = algoritmo_simplex.funcao_calculo_Z_j_e_Z_j_menos_C_j(self.lista_todas_variaveis, lista_nova_A, lista_nova_fo, vetor_coeficientes_C_B)
-        print("MAIS UM TESTE", vetor_C_j_menos_Z_j)
         # Encontra indices de 'a' que precisam ser elimados nas colunas das lista (tanto em vetores quanto em matrices)
         lista_indices_a = []
         if any('a' in item for item in self.lista_todas_variaveis):
@@ -211,17 +209,13 @@ class Otimizador:
                     lista_nova_fo, #-> coeficiente_base_tableau_C_j
                     vetor_C_j_menos_Z_j, 
                     lista_novo_b)            
-        print('Lista variaveis:','\n',self.lista_todas_variaveis,'\n',
-               'Lista f.o.:','\n',lista_nova_fo,'\n', 
-                'Lista matriz A:',f'\n {'\n'.join('\t' + str(linha) for linha in lista_nova_A)}', '\n',               'Lista vetor b:','\n',lista_novo_b, '\n',
-                'vetor_variaveis_C_B', '\n',vetor_variaveis_C_B,'\n', ## APAGAR?
-                'vetor_variaveis_C_B', '\n',vetor_coeficientes_C_B,'\n', ## APAGAR? 
-                'vetor_C_j_menos_Z_j', '\n',vetor_C_j_menos_Z_j ## APAGAR?
-               )
-        
-
-
-
+        # print('Lista variaveis:','\n',self.lista_todas_variaveis,'\n',
+        #        'Lista f.o.:','\n',lista_nova_fo,'\n', 
+        #         'Lista matriz A:',f'\n {'\n'.join('\t' + str(linha) for linha in lista_nova_A)}', '\n',               'Lista vetor b:','\n',lista_novo_b, '\n',
+        #         'vetor_variaveis_C_B', '\n',vetor_variaveis_C_B,'\n', ## APAGAR?
+        #         'vetor_variaveis_C_B', '\n',vetor_coeficientes_C_B,'\n', ## APAGAR? 
+        #         'vetor_C_j_menos_Z_j', '\n',vetor_C_j_menos_Z_j ## APAGAR?
+        #        )
 
 
     def simplex(self):
@@ -231,9 +225,7 @@ class Otimizador:
         ## Caso possua variaveis artificias (tipo == e/ou >=)
         if self._determinador() == True:      
             print('Porque o problema possui restricoes de igualdade. \nSera resolvida a Fase 1, depois Fase 2:')
-            # Realiza o simplex para dar as respostas da fase 1
-            self._calculo_simplex_fase1()
-            # Obtem os valores atualizados para posterior calculo da fase 2  
+            # Resolve o Simplex e obtem os valores atualizados para posterior calculo da fase 2  
             lista_nova_A, lista_novo_b, lista_nova_fo, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j = self._calculo_simplex_fase1()
             # Calculo da fase 2
             self._calculo_simplex_fase2(
@@ -250,18 +242,14 @@ class Otimizador:
 
 # Programa
 otimizacao_emilio = Otimizador()
-# otimizacao_emilio.mostrar_funcao_objetivo()
-# otimizacao_emilio.mostrar_restricoes()
-# otimizacao_emilio.simplex()
 
-# otimizacao_emilio.adicionar_funcao_objetivo('max. + 0x_1 +  0x_3 + 0x_2 + 0x_4 + 1x_5')
-# otimizacao_emilio.adicionar_restricao('+ 3000x_1  + 30000x_3 + 20000x_2 + 10000x_4 + 37777x_5 <= 137777')
-# otimizacao_emilio.adicionar_restricao('+ 1x_1 +  1x_3 + 1x_2 + 1x_4 + 5x_5 == 25')
-# otimizacao_emilio.adicionar_restricao('+ 20x_1 +  10x_3 + 5x_2 + 2x_4 + 250x_5 <= 500')
-# otimizacao_emilio.adicionar_restricao('+ 10x_1  + 20x_3 + 20x_2 +  15x_4 - 50x_5 >= 50')
-# otimizacao_emilio.adicionar_restricao('+ 0x_1  + 0x_3 + 0x_2 + 0x_4 + 1x_5 <= 1')
-# otimizacao_emilio.adicionar_restricao('+ 0x_1  + 0x_3  + 0x_2 + 0x_4 + 1x_5 >= 0')
-# otimizacao_emilio.simplex()
+otimizacao_emilio.adicionar_funcao_objetivo('max. + 0x_1 +  0x_3 + 0x_2 + 0x_4 + 1x_5')
+otimizacao_emilio.adicionar_restricao('+ 3000x_1  + 30000x_3 + 20000x_2 + 10000x_4 + 37777x_5 <= 137777')
+otimizacao_emilio.adicionar_restricao('+ 1x_1 +  1x_3 + 1x_2 + 1x_4 + 5x_5 == 25')
+otimizacao_emilio.adicionar_restricao('+ 20x_1 +  10x_3 + 5x_2 + 2x_4 + 250x_5 <= 500')
+otimizacao_emilio.adicionar_restricao('+ 10x_1  + 20x_3 + 20x_2 +  15x_4 - 50x_5 >= 50')
+otimizacao_emilio.adicionar_restricao('+ 0x_1  + 0x_3 + 0x_2 + 0x_4 + 1x_5 <= 1')
+otimizacao_emilio.simplex()
 
 # otimizacao_emilio.mostrar_funcao_objetivo()
 # otimizacao_emilio.mostrar_restricoes()
@@ -287,12 +275,12 @@ otimizacao_emilio = Otimizador()
 # otimizacao_emilio.simplex() 
 
 # SOLUCIONAR PROBLEMA SIMPLEX COM RESULTADOS LP 
-otimizacao_emilio.adicionar_funcao_objetivo('min. + 3000x_1 + 20000x_2 + 30000x_3 + 10000x_4 ')
-otimizacao_emilio.adicionar_restricao('+ 1x_1 + 1x_2 + 1x_3 + 1x_4  == 20')
-otimizacao_emilio.adicionar_restricao('+ 20x_1 + 5x_2 + 10x_3 + 2x_4 <= 200')
-otimizacao_emilio.adicionar_restricao('+ 10x_1 + 20x_2 + 20x_3 + 15x_4 >= 80')
-otimizacao_emilio.mostrar_problema()
-otimizacao_emilio.simplex()
+# otimizacao_emilio.adicionar_funcao_objetivo('min. + 3000x_1 + 20000x_2 + 30000x_3 + 10000x_4 ')
+# otimizacao_emilio.adicionar_restricao('+ 1x_1 + 1x_2 + 1x_3 + 1x_4  == 20')
+# otimizacao_emilio.adicionar_restricao('+ 20x_1 + 5x_2 + 10x_3 + 2x_4 <= 200')
+# otimizacao_emilio.adicionar_restricao('+ 10x_1 + 20x_2 + 20x_3 + 15x_4 >= 80')
+# otimizacao_emilio.mostrar_problema()
+# otimizacao_emilio.simplex()
 
 # SOLUCIONAR PROBLEMA SIMPLEX COM RESULTADOS LP OBTIDOS PARA FASE 2
 # otimizacao_emilio.adicionar_funcao_objetivo('min. + 3000x_1 + 20000x_2 + 30000x_3 + 10000x_4 + 0x_5 + 0x_6')
