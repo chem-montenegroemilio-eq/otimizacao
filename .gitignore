@@ -1,0 +1,22 @@
+# Ambiente virtual
+.venv/
+.venv_teste/
+
+# Build
+build/
+dist/
+*.egg-info/
+
+# Python
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos sensíveis
+.env
