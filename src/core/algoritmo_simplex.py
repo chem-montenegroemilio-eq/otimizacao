@@ -119,6 +119,7 @@ def funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
         vetor_C_j_menos_Z_j):
     lista_C_j_Z_j_evitar_infinito = []
     k=0
+    print('TESTEEEE', vetor_C_j_menos_Z_j)
 # 1 Condicional que precisa todos os valores de C_j_menos_Z_j ser <= 0 para parar (otimizacao tipo maximizacao)
     while any(e > 0 for e in vetor_C_j_menos_Z_j):
         print('-------------------------------------------------------------------------------------')
@@ -176,11 +177,11 @@ def funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
     -------------------------------------------------------
     -------------------------------------------------------
     Fim do loop:
-    otimo da fo: {-otimo_fo}
+    otimo da fo: {otimo_fo}
     valores f.o. fase1: \n\t{''.join(str(coeficiente_base_tableau_C_j))}
     matriz_A:\n {'\n'.join( '\t' + str(linha) for linha in lista_matriz_A)}
     vetor_b:\n \t {''.join(str(lista_coef_b))}'''
-    [print(lista) for lista in lista_C_j_Z_j_evitar_infinito]
+    # [print(lista) for lista in lista_C_j_Z_j_evitar_infinito]
     print(texto_fim_loop)
     return lista_matriz_A, lista_coef_b, coeficiente_base_tableau_C_j, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j 
 
@@ -260,6 +261,6 @@ def funcao_minimizar_loop_C_jmenosZ_j_ate_maior_a_0(
     valores f.o. fase: \n\t{''.join(str(coeficiente_base_tableau_C_j))}
     matriz_A:\n {'\n'.join( '\t' + str(linha) for linha in lista_matriz_A)}
     vetor_b:\n \t {''.join(str(lista_coef_b))}'''
-    [print(lista) for lista in lista_C_j_Z_j_evitar_infinito]
+    # [print(lista) for lista in lista_C_j_Z_j_evitar_infinito]
     print(texto_fim_loop)
     return lista_matriz_A, lista_coef_b, coeficiente_base_tableau_C_j, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j 

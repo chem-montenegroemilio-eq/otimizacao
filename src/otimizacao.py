@@ -1,7 +1,7 @@
 from typing import List
-from core import parser  
-from core import determinador_fase
-from core import algoritmo_simplex
+from .core import parser  
+from .core import determinador_fase
+from .core import algoritmo_simplex
 
 class Otimizador:
     """
@@ -141,7 +141,8 @@ class Otimizador:
         return lista_nova_A, lista_novo_b, lista_fo, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j
     
 
-    def _calculo_simplex_fase2(self, 
+    def _calculo_simplex_fase2(
+        self, 
         lista_nova_A, 
         lista_novo_b, 
         lista_nova_fo, # -> coeficiente_base_tableau_C_j
@@ -172,6 +173,7 @@ class Otimizador:
                 for i, fila in enumerate(lista_nova_A):
                     fila.pop(indices_eliminar)
                     lista_nova_A[i] = fila
+            print(self.__dict__)
             if 'min' in self.fo_min_max:
                 algoritmo_simplex.funcao_minimizar_loop_C_jmenosZ_j_ate_maior_a_0(
                     self.lista_todas_variaveis,
@@ -185,37 +187,35 @@ class Otimizador:
             else:
                 algoritmo_simplex.funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
                     self.lista_todas_variaveis,
+                    lista_nova_fo, #-> coeficiente_base_tableau_C_j
                     lista_nova_A, 
+                    lista_novo_b, 
                     vetor_variaveis_C_B, 
                     vetor_coeficientes_C_B, 
-                    lista_nova_fo, #-> coeficiente_base_tableau_C_j
                     vetor_C_j_menos_Z_j, 
-                    lista_novo_b)
+                    )
         # Resolve para o caso que somente haja variaveis tipo 's'
         else:
             if 'min' in self.fo_min_max:
                 algoritmo_simplex.funcao_minimizar_loop_C_jmenosZ_j_ate_maior_a_0(
+                    self.lista_todas_variaveis,
+                    lista_nova_fo, #-> coeficiente_base_tableau_C_j
                     lista_nova_A, 
+                    lista_novo_b, 
                     vetor_variaveis_C_B, 
                     vetor_coeficientes_C_B, 
-                    lista_nova_fo, #-> coeficiente_base_tableau_C_j
                     vetor_C_j_menos_Z_j, 
-                    lista_novo_b)
+                    )
             else:
                 algoritmo_simplex.funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
+                    self.lista_todas_variaveis,
+                    lista_nova_fo, #-> coeficiente_base_tableau_C_j
                     lista_nova_A, 
+                    lista_novo_b, 
                     vetor_variaveis_C_B, 
                     vetor_coeficientes_C_B, 
-                    lista_nova_fo, #-> coeficiente_base_tableau_C_j
                     vetor_C_j_menos_Z_j, 
-                    lista_novo_b)            
-        # print('Lista variaveis:','\n',self.lista_todas_variaveis,'\n',
-        #        'Lista f.o.:','\n',lista_nova_fo,'\n', 
-        #         'Lista matriz A:',f'\n {'\n'.join('\t' + str(linha) for linha in lista_nova_A)}', '\n',               'Lista vetor b:','\n',lista_novo_b, '\n',
-        #         'vetor_variaveis_C_B', '\n',vetor_variaveis_C_B,'\n', ## APAGAR?
-        #         'vetor_variaveis_C_B', '\n',vetor_coeficientes_C_B,'\n', ## APAGAR? 
-        #         'vetor_C_j_menos_Z_j', '\n',vetor_C_j_menos_Z_j ## APAGAR?
-        #        )
+                    )            
 
 
     def simplex(self):
@@ -238,54 +238,15 @@ class Otimizador:
         ## Caso possua somente variaveis de folga (tipo <=)
         else:     
             print('---\n---\nO problema precisa ser resolvido apenas pela Fase 2.\n---\n---')    
-
-
-# Programa
-otimizacao_emilio = Otimizador()
-
-otimizacao_emilio.adicionar_funcao_objetivo('max. + 0x_1 +  0x_3 + 0x_2 + 0x_4 + 1x_5')
-otimizacao_emilio.adicionar_restricao('+ 3000x_1  + 30000x_3 + 20000x_2 + 10000x_4 + 37777x_5 <= 137777')
-otimizacao_emilio.adicionar_restricao('+ 1x_1 +  1x_3 + 1x_2 + 1x_4 + 5x_5 == 25')
-otimizacao_emilio.adicionar_restricao('+ 20x_1 +  10x_3 + 5x_2 + 2x_4 + 250x_5 <= 500')
-otimizacao_emilio.adicionar_restricao('+ 10x_1  + 20x_3 + 20x_2 +  15x_4 - 50x_5 >= 50')
-otimizacao_emilio.adicionar_restricao('+ 0x_1  + 0x_3 + 0x_2 + 0x_4 + 1x_5 <= 1')
-otimizacao_emilio.simplex()
-
-# otimizacao_emilio.mostrar_funcao_objetivo()
-# otimizacao_emilio.mostrar_restricoes()
-# otimizacao_emilio.mostrar_problema()
-
-# otimizacao_emilio.simplex()
-# otimizacao_emilio._calculo_simplex_fase2()
-
-# EXEMPLO YOUTUBE
-# otimizacao_emilio.adicionar_funcao_objetivo('max. + 6x_1 - 7x_2 - 4x_3')
-# otimizacao_emilio.adicionar_restricao('+ 2x_1 + 5x_2 - 1x_3 <= 18')
-# otimizacao_emilio.adicionar_restricao('- 1x_1 + 1x_2 + 2x_3 >= 14')
-# otimizacao_emilio.adicionar_restricao('+ 3x_1 +  2x_2 + 2x_3 == 26')
-# otimizacao_emilio.mostrar_problema()
-# otimizacao_emilio.simplex()
-
-# TESTE DO PROBLEMA DO GUT
-# otimizacao_emilio.adicionar_funcao_objetivo('max. + 0.062x_1 + 0.074x_2')
-# otimizacao_emilio.adicionar_restricao('+ 1x_1 + 1x_2 <= 10')
-# otimizacao_emilio.adicionar_restricao('- 1x_1 + 0x_2 <= 0')
-# otimizacao_emilio.adicionar_restricao('+ 0x_1 - 1x_2 <= 0')
-# otimizacao_emilio.mostrar_problema()
-# otimizacao_emilio.simplex() 
-
-# SOLUCIONAR PROBLEMA SIMPLEX COM RESULTADOS LP 
-# otimizacao_emilio.adicionar_funcao_objetivo('min. + 3000x_1 + 20000x_2 + 30000x_3 + 10000x_4 ')
-# otimizacao_emilio.adicionar_restricao('+ 1x_1 + 1x_2 + 1x_3 + 1x_4  == 20')
-# otimizacao_emilio.adicionar_restricao('+ 20x_1 + 5x_2 + 10x_3 + 2x_4 <= 200')
-# otimizacao_emilio.adicionar_restricao('+ 10x_1 + 20x_2 + 20x_3 + 15x_4 >= 80')
-# otimizacao_emilio.mostrar_problema()
-# otimizacao_emilio.simplex()
-
-# SOLUCIONAR PROBLEMA SIMPLEX COM RESULTADOS LP OBTIDOS PARA FASE 2
-# otimizacao_emilio.adicionar_funcao_objetivo('min. + 3000x_1 + 20000x_2 + 30000x_3 + 10000x_4 + 0x_5 + 0x_6')
-# otimizacao_emilio.adicionar_restricao('+ 10x_1 + 0x_2 + 0x_3 + 5x_4 + 0x_5 + 1x_6 <= 320')
-# otimizacao_emilio.adicionar_restricao('+ 10x_1 - 5x_2 + 0x_3 - 8x_4 + 1x_5 + 0x_6 <= 0')
-# otimizacao_emilio.adicionar_restricao('+ 1x_1 + 1x_2 + 1x_3 + 1x_4 + 0x_5 + 0x_6 <= 20')
-# otimizacao_emilio.mostrar_problema()
-# otimizacao_emilio.simplex()
+            # print(self.__dict__)
+            lista_matriz_A, lista_coef_b = self._tratamento_dados(self.funcao_objetivo, self.restricoes)
+            coeficientes_fo, vetor_variaveis_C_B, vetor_coeficientes_C_B = algoritmo_simplex.funcao_C_j_e_C_B(self.fo_min_max, self.lista_todas_variaveis, self.lista_fo)
+            vetor_Z_j, vetor_C_j_menos_Z_j = algoritmo_simplex.funcao_calculo_Z_j_e_Z_j_menos_C_j(self.lista_todas_variaveis, lista_matriz_A, coeficientes_fo, vetor_coeficientes_C_B)
+            self._calculo_simplex_fase2(
+                lista_matriz_A, 
+                lista_coef_b, 
+                coeficientes_fo, # -> coeficiente_base_tableau_C_j
+                vetor_variaveis_C_B, 
+                vetor_coeficientes_C_B, 
+                vetor_C_j_menos_Z_j
+                )
