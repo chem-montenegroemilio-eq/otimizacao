@@ -32,6 +32,18 @@ def atualizacao_coef_vetor_C_B(lista_todas_variaveis, coeficiente_base_tableau_C
     return vetor_variaveis_C_B, vetor_coeficientes_C_B
 
 
+### Funcao que valida existencia e continuacao da Fase 1
+def funcao_valida_cotinuacao_fase1(lista_todas_variaveis, vetor_variaveis_C_B):
+    lista_com_artificiais = [artificiais for artificiais in lista_todas_variaveis if 'a' in artificiais]
+    if len(lista_com_artificiais) > 0:
+        lista_com_artificiais_C_B = [artificiais_CB for artificiais_CB in vetor_variaveis_C_B if 'a' in artificiais_CB]
+        if len(lista_com_artificiais_C_B) > 0:
+            return True
+        else:
+            return False
+    else:
+        return True
+    
 ### Funcao valores C_j e vetor C_B
 # 1 Define-se os valores de todas as variaveis base do tableau C_j (consideram-se todas as variaveis) 
 def funcao_C_j_e_C_B(definir_min_max, lista_todas_variaveis, lista_fo):
@@ -170,6 +182,9 @@ def funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
             vetor_coeficientes_C_B)
         if calculo_visivel == True:
             print('vetor_C_j_menos_Z_j: \n \t', vetor_C_j_menos_Z_j)
+        if funcao_valida_cotinuacao_fase1(lista_todas_variaveis, vetor_variaveis_C_B) is False:
+            break
+
         k+=1
 # 5 Calcula otimo da f.o.= c_{j}*x_{j}
     otimo_fo = sum(lista_coef_b[i]*elemento_C_B for i, elemento_C_B in enumerate(vetor_coeficientes_C_B) )
@@ -183,7 +198,7 @@ def funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
     -------------------------------------------------------
     Fim do loop:
     otimo da fo: {otimo_fo}
-    valores f.o. fase1: \n\t{''.join(str(coeficientes_fo))}
+    valores f.o.: \n\t{''.join(str(coeficientes_fo))}
     matriz_A:\n {'\n'.join( '\t' + str(linha) for linha in lista_matriz_A)}
     vetor_b:\n \t {''.join(str(lista_coef_b))}'''
     print(texto_fim_loop)

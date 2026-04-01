@@ -24,20 +24,20 @@ class Otimizador:
         self.calculo_visivel = None
 
     def adicionar_funcao_objetivo(self, 
-                                  funcao_objetivo=str):
+                                  funcao_objetivo:str):
         """Coloca a funcao objetivo no sistema."""
         self.funcao_objetivo = funcao_objetivo
 
 
     def adicionar_restricao(self, 
-                            nova_restricao=str):
+                            nova_restricao: str):
         """Adiciona a restricao para uma lista que sera tratada no sistema."""
         self.restricoes.append(nova_restricao)
 
 
     def _tratamento_dados(self, 
-                          funcao_objetivo=str,
-                          restricoes=str):
+                          funcao_objetivo: str,
+                          restricoes: str):
         """Faz tratamento dos strings e converte-os em vetores e matrices para resolver o problema de otimizacao"""
         # Define-se a f.o.: min. ou max. e separa do string da equacao
         print(funcao_objetivo)
@@ -160,8 +160,6 @@ class Otimizador:
               -------------------------
               -------------------------
               ''') 
-        # Recalculando vetor Z_j e C_j-Z_j
-        vetor_Z_j, vetor_C_j_menos_Z_j = algoritmo_simplex.funcao_calculo_Z_j_e_Z_j_menos_C_j(self.lista_todas_variaveis, lista_nova_A, lista_nova_fo, vetor_coeficientes_C_B)
         # Encontra indices de 'a' que precisam ser elimados nas colunas das lista (tanto em vetores quanto em matrices)
         lista_indices_a = []
         if any('a' in item for item in self.lista_todas_variaveis):
@@ -176,7 +174,6 @@ class Otimizador:
                 for i, fila in enumerate(lista_nova_A):
                     fila.pop(indices_eliminar)
                     lista_nova_A[i] = fila
-            print(self.__dict__)
             if 'min' in self.fo_min_max:
                 # lista_nova_fo = [-coeficiente for coeficiente in lista_nova_fo]
                 algoritmo_simplex.funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
@@ -242,8 +239,12 @@ class Otimizador:
         # Para exibir os calculos
         self.calculo_visivel = calculo_visivel
         ## Caso possua variaveis artificias (tipo == e/ou >=)
-        if self._determinador() == True:      
-            print('Porque o problema possui restricoes de igualdade. \nSera resolvida a Fase 1, depois Fase 2:')
+        if self._determinador() == True:    
+            mensagem_sobre_artificiais = '''
+            Porque o problema possui restricoes "=" ou ">=", então será resolvida a Fase 1, com variaveis artificiais "a".
+            Depois pela Fase 2.
+            '''  
+            print(mensagem_sobre_artificiais)
             # Resolve o Simplex e obtem os valores atualizados para posterior calculo da fase 2  
             lista_nova_A, lista_novo_b, lista_nova_fo, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j = self._calculo_simplex_fase1()
             # Calculo da fase 2
