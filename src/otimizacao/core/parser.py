@@ -85,20 +85,6 @@ def funcao_conversao_dicionario_restricao_em_lista_restricao(tupla_restricoes, l
         lista_matriz_A.append(lista_restricao)
     return lista_matriz_A
 
-### Funcao conversao dicionario de restricao em lista de restricoes
-def funcao_conversao_dicionario_restricao_em_lista_restricao(tupla_restricoes, lista_todas_variaveis):
-    lista_matriz_A = []
-    lista_restricao = []
-    for dicionario_restricao in tupla_restricoes:
-        lista_restricao = []
-        for variavel in lista_todas_variaveis:
-            if variavel in dicionario_restricao:
-                lista_restricao.append(dicionario_restricao[variavel])
-            else:   
-                lista_restricao.append(0)
-        lista_matriz_A.append(lista_restricao)
-    return lista_matriz_A
-
 ### Funcao conversao dicionario de funcao em lista de funcao
 def funcao_conversao_dicionario_funcaoobjetivo_em_lista_funcaoobjetivo(dicionario_fo, lista_todas_variaveis):
     lista_fo = []

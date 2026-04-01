@@ -2,6 +2,7 @@ from typing import List
 from .core import parser  
 from .core import determinador_fase
 from .core import algoritmo_simplex
+from .exemplo_Simplex import executar
 
 class Otimizador:
     """
@@ -9,18 +10,18 @@ class Otimizador:
     """
     def __init__(self, 
                 funcao_objetivo=None,
-                restricoes=None):
+                restricoes=None,
+                fo_min_max = None,
+                calculo_visivel = None):
         """
         Args:
             funcao_objetivo (str): funcao objetivo a minimizar ou maximizar.
             restricoes (str): restricoes do problema a otimizar.
             """
-        self.funcao_objetivo = "min. + 3000x_1 + 20000x_2 + 30000x_3 + 10000x_4"
-        self.restricoes: List[str] = [
-            '+ 1x_1 + 1x_2 + 1x_3 + 1x_4 == 20', 
-            '+ 20x_1 + 5x_2 + 10x_3 + 2x_4 <= 200',
-            '+ 10x_1 + 20x_2 + 20x_3 + 15x_4 >= 80' ]
-
+        self.funcao_objetivo = None
+        self.restricoes: List[str] = []
+        self.fo_min_max = None
+        self.calculo_visivel = None
 
     def adicionar_funcao_objetivo(self, 
                                   funcao_objetivo=str):
@@ -31,11 +32,7 @@ class Otimizador:
     def adicionar_restricao(self, 
                             nova_restricao=str):
         """Adiciona a restricao para uma lista que sera tratada no sistema."""
-        if self.restricoes[0]=='+ 1x_1 + 1x_2 + 1x_3 + 1x_4 == 20':
-            self.restricoes = []
-            self.restricoes.append(nova_restricao)
-        else:
-            self.restricoes.append(nova_restricao)
+        self.restricoes.append(nova_restricao)
 
 
     def _tratamento_dados(self, 
@@ -43,6 +40,7 @@ class Otimizador:
                           restricoes=str):
         """Faz tratamento dos strings e converte-os em vetores e matrices para resolver o problema de otimizacao"""
         # Define-se a f.o.: min. ou max. e separa do string da equacao
+        print(funcao_objetivo)
         substituir_ponto = funcao_objetivo.find('.')
         funcao_objetivo = funcao_objetivo[:substituir_ponto] + '|' + funcao_objetivo[substituir_ponto+1:]
         self.fo_min_max, fo_equacao = funcao_objetivo.split('|')
@@ -226,7 +224,14 @@ class Otimizador:
 
 
     def simplex(self, calculo_visivel=True):
+        if self.funcao_objetivo is None and self.restricoes == []:
+            self.funcao_objetivo, self.restricoes, self.calculo_visivel = executar()
+        elif self.funcao_objetivo is not None and self.restricoes == []:
+            raise ValueError('Faltou adicionar função objetivo.')
+        elif self.funcao_objetivo is None and self.restricoes != []:
+            raise ValueError('Faltou adicionar restricoes.')
         """Determina a fase e retorna os valores resolvidos pelo metodo simplex."""
+        # print(self.funcao_objetivo)
         self._tratamento_dados(self.funcao_objetivo, self.restricoes)
         # Para exibir os calculos
         self.calculo_visivel = calculo_visivel
