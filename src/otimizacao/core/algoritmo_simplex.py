@@ -39,12 +39,15 @@ def funcao_C_j_e_C_B(definir_min_max, lista_todas_variaveis, lista_fo):
     coeficiente_base_tableau_C_j = []
     for i, variavel in enumerate(lista_todas_variaveis):
         if 'x' in variavel:
-            coeficiente_base_tableau_C_j.append(lista_fo[i])
-        elif 'a' in variavel:
             if 'max' in definir_min_max:
-                coeficiente_base_tableau_C_j.append(-M)
+                coeficiente_base_tableau_C_j.append(lista_fo[i])
             else:
-                coeficiente_base_tableau_C_j.append(M)
+                coeficiente_base_tableau_C_j.append(-lista_fo[i])
+        elif 'a' in variavel:
+            # if 'max' in definir_min_max:
+            coeficiente_base_tableau_C_j.append(-M)
+            # else:
+            #     coeficiente_base_tableau_C_j.append(M)
         else:
             coeficiente_base_tableau_C_j.append(0)
     print('coeficiente_base_tableau_C_j: ', coeficiente_base_tableau_C_j)
@@ -117,7 +120,8 @@ def funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
         vetor_variaveis_C_B, 
         vetor_coeficientes_C_B, 
         vetor_C_j_menos_Z_j,
-        calculo_visivel=True
+        calculo_visivel=True,
+        min_ou_max=str,
         ):
     lista_C_j_Z_j_evitar_infinito = []
     k=0
@@ -172,98 +176,17 @@ def funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
         k+=1
 # 5 Calcula otimo da f.o.= c_{j}*x_{j}
     otimo_fo = sum(lista_coef_b[i]*elemento_C_B for i, elemento_C_B in enumerate(vetor_coeficientes_C_B) )
+    if 'max' in min_ou_max:
+        coeficientes_fo = [coeficiente for coeficiente in coeficiente_base_tableau_C_j]
+    elif 'min' in min_ou_max:
+        otimo_fo = -otimo_fo
+        coeficientes_fo = [-coeficiente for coeficiente in coeficiente_base_tableau_C_j]
     texto_fim_loop = f'''
     -------------------------------------------------------
     -------------------------------------------------------
     Fim do loop:
     otimo da fo: {otimo_fo}
-    valores f.o. fase1: \n\t{''.join(str(coeficiente_base_tableau_C_j))}
-    matriz_A:\n {'\n'.join( '\t' + str(linha) for linha in lista_matriz_A)}
-    vetor_b:\n \t {''.join(str(lista_coef_b))}'''
-    # [print(lista) for lista in lista_C_j_Z_j_evitar_infinito]
-    print(texto_fim_loop)
-    return lista_matriz_A, lista_coef_b, coeficiente_base_tableau_C_j, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j 
-
-
-### Funcao loop minimizar (while) até C_j menos Z_j ser >=0
-def funcao_minimizar_loop_C_jmenosZ_j_ate_maior_a_0(
-        lista_todas_variaveis,
-        coeficiente_base_tableau_C_j, #-> coeficiente da fo
-        lista_matriz_A, 
-        lista_coef_b, 
-        vetor_variaveis_C_B, 
-        vetor_coeficientes_C_B, 
-        vetor_C_j_menos_Z_j, 
-        calculo_visivel=True,
-        ):
-    lista_C_j_Z_j_evitar_infinito = []
-    k=0
-# 1 Condicional que precisa todos os valores de C_j_menos_Z_j ser <= 0 para parar (otimizacao tipo maximizacao)
-    print('Analisando vetor C_j_menos_Z_j:\n\t', vetor_C_j_menos_Z_j)
-    while any(e < 0 for e in vetor_C_j_menos_Z_j):
-        if calculo_visivel == True:
-            print('-------------------------------------------------------------------------------------')
-            print(f'# Inicia loop n°{k+1}')
-            # PRECISA REDEFINIR (CRIAR FUNCAO?) - Evita loop infinito e outorga maior valor negativo de C_j-Z_j 
-            print('vetor C_j_menos_Z_j', vetor_C_j_menos_Z_j)
-        lista_C_j_Z_j_evitar_infinito.append(tuple(vetor_C_j_menos_Z_j))
-        if len(set(lista_C_j_Z_j_evitar_infinito)) == len(lista_C_j_Z_j_evitar_infinito):
-            menor_valor_C_j_Z_j = min(vetor_C_j_menos_Z_j)
-        else:
-            print('Parece que entramos em loop infinito, vamos corrijir para C_j-Z_j!')
-            vetor_C_j_menos_Z_j[vetor_C_j_menos_Z_j.index(max(vetor_C_j_menos_Z_j))] = vetor_C_j_menos_Z_j[vetor_C_j_menos_Z_j.index(max(vetor_C_j_menos_Z_j))] - 1
-            menor_valor_C_j_Z_j = min(vetor_C_j_menos_Z_j)
-        # Pega indice de maior valor positivo para definir coluna pivo
-        indice_menor_valor_C_j_Z_j = vetor_C_j_menos_Z_j.index(menor_valor_C_j_Z_j) 
-        coluna_pivo = lista_todas_variaveis[indice_menor_valor_C_j_Z_j]
-# 2 Obtencao do vetor razao e consequentemente fila pivo 
-        vetor_razao, menor_valor_razao, fila_pivo = calculo_vetor_razao(lista_matriz_A, lista_coef_b, indice_menor_valor_C_j_Z_j, vetor_variaveis_C_B)
-        if calculo_visivel == True:
-            print('COLUNA PIVO', coluna_pivo)
-            print('vetor_razao', vetor_razao)
-            print('menor_valor_razao:', menor_valor_razao)
-            print('vetor variaveis C_B:', vetor_variaveis_C_B)
-            print('vetor_coeficientes_C_B:', vetor_coeficientes_C_B)    
-# 3 Atualizam-se as variaveis e valores do vetor C_B        
-        vetor_variaveis_C_B, vetor_coeficientes_C_B = atualizacao_coef_vetor_C_B(lista_todas_variaveis, coeficiente_base_tableau_C_j, vetor_variaveis_C_B, vetor_coeficientes_C_B, fila_pivo, coluna_pivo)
-        if calculo_visivel == True:
-            print('novo vetor variaveis C_B:', vetor_variaveis_C_B)
-            print('novo vetor C_B:', vetor_coeficientes_C_B)
-            print('matriz_A:\n', '\n'.join( '\t'+str(fila) for fila in lista_matriz_A))
-            print('vetor b:\n \t' + ''.join(str(lista_coef_b)))
-            print('\n     # Inicia iteracao')
-# 3 Atualiza-se a matriz A e vetor b
-        lista_matriz_A, lista_coef_b, vetor_coeficientes_C_B = funcao_calculo_iteracoes(
-            lista_todas_variaveis, 
-            lista_matriz_A, 
-            lista_coef_b, 
-            vetor_variaveis_C_B, 
-            vetor_coeficientes_C_B, 
-            coluna_pivo
-            )
-        if calculo_visivel == True:
-            print('matriz A tratada:\n' + '\n'.join('\t'+str(fila) for fila in lista_matriz_A))
-            print('vetor_b tratado:\n \t' + ''.join(str(lista_coef_b)))    
-            print('\n     # Inicia calculo Z_j_e_Z_j_menos_C_j')
-# 4 Calcula Z_j e C_j-Z_j baseado nas variaveis e coeficientes da f.o. (C_j), na matriz A, e vetor C_B 
-        vetor_Z_j, vetor_C_j_menos_Z_j = funcao_calculo_Z_j_e_Z_j_menos_C_j(
-            lista_todas_variaveis, 
-            lista_matriz_A, 
-            coeficiente_base_tableau_C_j, 
-            vetor_coeficientes_C_B)
-        if calculo_visivel == True:
-            print('vetor_C_j_menos_Z_j: \n\t', vetor_C_j_menos_Z_j)
-        if k==10: # !!??? nao lembro por que fiz isto
-            break
-        k+=1
-# 5 Calcula otimo da f.o.= c_{j}*x_{j}
-    otimo_fo = sum(lista_coef_b[i]*elemento_C_B for i, elemento_C_B in enumerate(vetor_coeficientes_C_B) )
-    texto_fim_loop = f'''
-    -------------------------------------------------------
-    -------------------------------------------------------
-    Fim do loop:
-    otimo da fo: {otimo_fo}
-    valores f.o. fase: \n\t{''.join(str(coeficiente_base_tableau_C_j))}
+    valores f.o. fase1: \n\t{''.join(str(coeficientes_fo))}
     matriz_A:\n {'\n'.join( '\t' + str(linha) for linha in lista_matriz_A)}
     vetor_b:\n \t {''.join(str(lista_coef_b))}'''
     # [print(lista) for lista in lista_C_j_Z_j_evitar_infinito]

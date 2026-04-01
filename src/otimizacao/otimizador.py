@@ -126,9 +126,13 @@ class Otimizador:
                 vetor_coeficientes_C_B, 
                 vetor_C_j_menos_Z_j,
                 self.calculo_visivel,
+                self.fo_min_max, 
                 )
         else:
-            lista_nova_A, lista_novo_b, lista_fo, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j = algoritmo_simplex.funcao_minimizar_loop_C_jmenosZ_j_ate_maior_a_0(
+            # print(coeficiente_base_tableau_C_j)
+            # coeficiente_base_tableau_C_j = [-coeficiente for coeficiente in coeficiente_base_tableau_C_j]
+            # print(coeficiente_base_tableau_C_j)
+            lista_nova_A, lista_novo_b, lista_fo, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j = algoritmo_simplex.funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
                 self.lista_todas_variaveis, 
                 coeficiente_base_tableau_C_j, # coeficientes do vetor c^{T}_{j}
                 lista_matriz_A, 
@@ -137,6 +141,7 @@ class Otimizador:
                 vetor_coeficientes_C_B, 
                 vetor_C_j_menos_Z_j,
                 self.calculo_visivel,
+                self.fo_min_max, 
                 )
         return lista_nova_A, lista_novo_b, lista_fo, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j
     
@@ -176,7 +181,8 @@ class Otimizador:
                     lista_nova_A[i] = fila
             print(self.__dict__)
             if 'min' in self.fo_min_max:
-                algoritmo_simplex.funcao_minimizar_loop_C_jmenosZ_j_ate_maior_a_0(
+                # lista_nova_fo = [-coeficiente for coeficiente in lista_nova_fo]
+                algoritmo_simplex.funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
                     self.lista_todas_variaveis,
                     lista_nova_fo, #-> coeficiente_base_tableau_C_j
                     lista_nova_A, 
@@ -184,7 +190,8 @@ class Otimizador:
                     vetor_variaveis_C_B, 
                     vetor_coeficientes_C_B, 
                     vetor_C_j_menos_Z_j,
-                    calculo_visivel 
+                    self.calculo_visivel,
+                    self.fo_min_max,  
                     )
             else:
                 algoritmo_simplex.funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
@@ -195,12 +202,14 @@ class Otimizador:
                     vetor_variaveis_C_B, 
                     vetor_coeficientes_C_B, 
                     vetor_C_j_menos_Z_j,
-                    calculo_visivel 
+                    self.calculo_visivel,
+                    self.fo_min_max,  
                     )
         # Resolve para o caso que somente haja variaveis tipo 's'
         else:
             if 'min' in self.fo_min_max:
-                algoritmo_simplex.funcao_minimizar_loop_C_jmenosZ_j_ate_maior_a_0(
+                # lista_nova_fo = [-coeficiente for coeficiente in lista_nova_fo]
+                algoritmo_simplex.funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
                     self.lista_todas_variaveis,
                     lista_nova_fo, #-> coeficiente_base_tableau_C_j
                     lista_nova_A, 
@@ -208,7 +217,8 @@ class Otimizador:
                     vetor_variaveis_C_B, 
                     vetor_coeficientes_C_B, 
                     vetor_C_j_menos_Z_j,
-                    self.calculo_visivel 
+                    self.calculo_visivel,
+                    self.fo_min_max, 
                     )
             else:
                 algoritmo_simplex.funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
@@ -220,6 +230,7 @@ class Otimizador:
                     vetor_coeficientes_C_B, 
                     vetor_C_j_menos_Z_j, 
                     self.calculo_visivel,
+                    self.fo_min_max, 
                     )            
 
 
