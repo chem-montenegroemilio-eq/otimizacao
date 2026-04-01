@@ -44,7 +44,7 @@ class Otimizador:
         substituir_ponto = funcao_objetivo.find('.')
         funcao_objetivo = funcao_objetivo[:substituir_ponto] + '|' + funcao_objetivo[substituir_ponto+1:]
         self.fo_min_max, fo_equacao = funcao_objetivo.split('|')
-        fo_equacao.replace(' ', '')
+        fo_equacao = fo_equacao.replace(' ', '')
         # Obtem-se variaveis e coeficientes separados numa funcao
         dicionario_fo =  parser.funcao_coef_variaveis(fo_equacao)
         # Define-se as restricoes, tornando os coeficientes à direita positivos
