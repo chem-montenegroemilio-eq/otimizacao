@@ -126,15 +126,10 @@ def funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
         if calculo_visivel == True:
             print('-------------------------------------------------------------------------------------')
             print(f'# Inicia loop n°{k+1}')
-        # PRECISA REDEFINIR (CRIAR FUNCAO?) - Evita loop infinito e outorga maior valor positivo de C_j-Z_j 
             print('vetor C_j_menos_Z_j:\n\t', vetor_C_j_menos_Z_j)
+        # PRECISA REDEFINIR (CRIAR FUNCAO?) - Evita loop infinito e outorga maior valor positivo de C_j-Z_j 
         lista_C_j_Z_j_evitar_infinito.append(tuple(vetor_C_j_menos_Z_j))
-        if len(set(lista_C_j_Z_j_evitar_infinito)) == len(lista_C_j_Z_j_evitar_infinito):
-            maior_valor_C_j_Z_j = max(vetor_C_j_menos_Z_j)
-        else:
-            print('Parece que entramos em loop infinito, vamos corrijir para C_j-Z_j!')
-            vetor_C_j_menos_Z_j[vetor_C_j_menos_Z_j.index(max(vetor_C_j_menos_Z_j))] = vetor_C_j_menos_Z_j[vetor_C_j_menos_Z_j.index(max(vetor_C_j_menos_Z_j))] - 1
-            maior_valor_C_j_Z_j = max(vetor_C_j_menos_Z_j)
+        maior_valor_C_j_Z_j = max(vetor_C_j_menos_Z_j)
         # Pega indice de maior valor positivo para definir coluna pivo
         indice_maior_valor_C_j_Z_j = vetor_C_j_menos_Z_j.index(maior_valor_C_j_Z_j) 
         coluna_pivo = lista_todas_variaveis[indice_maior_valor_C_j_Z_j]
