@@ -174,8 +174,6 @@ def funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
             vetor_coeficientes_C_B)
         if calculo_visivel == True:
             print('vetor_C_j_menos_Z_j: \n \t', vetor_C_j_menos_Z_j)
-        if k==10: # !!??? nao lembro por que fiz isto
-            break
         k+=1
 # 5 Calcula otimo da f.o.= c_{j}*x_{j}
     otimo_fo = sum(lista_coef_b[i]*elemento_C_B for i, elemento_C_B in enumerate(vetor_coeficientes_C_B) )
