@@ -44,10 +44,7 @@ def funcao_C_j_e_C_B(definir_min_max, lista_todas_variaveis, lista_fo):
             else:
                 coeficiente_base_tableau_C_j.append(-lista_fo[i])
         elif 'a' in variavel:
-            # if 'max' in definir_min_max:
             coeficiente_base_tableau_C_j.append(-M)
-            # else:
-            #     coeficiente_base_tableau_C_j.append(M)
         else:
             coeficiente_base_tableau_C_j.append(0)
     print('coeficiente_base_tableau_C_j: ', coeficiente_base_tableau_C_j)
@@ -189,6 +186,5 @@ def funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
     valores f.o. fase1: \n\t{''.join(str(coeficientes_fo))}
     matriz_A:\n {'\n'.join( '\t' + str(linha) for linha in lista_matriz_A)}
     vetor_b:\n \t {''.join(str(lista_coef_b))}'''
-    # [print(lista) for lista in lista_C_j_Z_j_evitar_infinito]
     print(texto_fim_loop)
     return lista_matriz_A, lista_coef_b, coeficiente_base_tableau_C_j, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j 

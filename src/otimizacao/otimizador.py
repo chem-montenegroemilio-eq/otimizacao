@@ -129,9 +129,6 @@ class Otimizador:
                 self.fo_min_max, 
                 )
         else:
-            # print(coeficiente_base_tableau_C_j)
-            # coeficiente_base_tableau_C_j = [-coeficiente for coeficiente in coeficiente_base_tableau_C_j]
-            # print(coeficiente_base_tableau_C_j)
             lista_nova_A, lista_novo_b, lista_fo, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j = algoritmo_simplex.funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
                 self.lista_todas_variaveis, 
                 coeficiente_base_tableau_C_j, # coeficientes do vetor c^{T}_{j}
@@ -208,7 +205,6 @@ class Otimizador:
         # Resolve para o caso que somente haja variaveis tipo 's'
         else:
             if 'min' in self.fo_min_max:
-                # lista_nova_fo = [-coeficiente for coeficiente in lista_nova_fo]
                 algoritmo_simplex.funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
                     self.lista_todas_variaveis,
                     lista_nova_fo, #-> coeficiente_base_tableau_C_j
@@ -242,11 +238,9 @@ class Otimizador:
         elif self.funcao_objetivo is None and self.restricoes != []:
             raise ValueError('Faltou adicionar restricoes.')
         """Determina a fase e retorna os valores resolvidos pelo metodo simplex."""
-        # print(self.funcao_objetivo)
         self._tratamento_dados(self.funcao_objetivo, self.restricoes)
         # Para exibir os calculos
         self.calculo_visivel = calculo_visivel
-        # print(self.__dict__)
         ## Caso possua variaveis artificias (tipo == e/ou >=)
         if self._determinador() == True:      
             print('Porque o problema possui restricoes de igualdade. \nSera resolvida a Fase 1, depois Fase 2:')
