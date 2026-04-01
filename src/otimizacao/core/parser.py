@@ -57,7 +57,6 @@ def matriz_restricoes(lista_restricoes):
         elif '>=' in restricao:
             equacao_restricao, coef_b = restricao.split('>=')
             equacao_restricao = equacao_restricao + f'- 1e_{i} '
-            i += 1
             equacao_restricao = equacao_restricao + f'+ 1a_{i} '
         # caso ==, entao adicionar a_i
         elif '==' in restricao:
