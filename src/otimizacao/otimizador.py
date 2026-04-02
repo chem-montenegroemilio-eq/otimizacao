@@ -176,7 +176,7 @@ class Otimizador:
                     lista_nova_A[i] = fila
             if 'min' in self.fo_min_max:
                 # lista_nova_fo = [-coeficiente for coeficiente in lista_nova_fo]
-                algoritmo_simplex.funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
+                mat_A, vet_b, coef_fo, var_CB, coef_CB, Cj_menos_Zj = algoritmo_simplex.funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
                     self.lista_todas_variaveis,
                     lista_nova_fo, #-> coeficiente_base_tableau_C_j
                     lista_nova_A, 
@@ -188,7 +188,7 @@ class Otimizador:
                     self.fo_min_max,  
                     )
             else:
-                algoritmo_simplex.funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
+                mat_A, vet_b, coef_fo, var_CB, coef_CB, Cj_menos_Zj = algoritmo_simplex.funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
                     self.lista_todas_variaveis,
                     lista_nova_fo, #-> coeficiente_base_tableau_C_j
                     lista_nova_A, 
@@ -202,7 +202,7 @@ class Otimizador:
         # Resolve para o caso que somente haja variaveis tipo 's'
         else:
             if 'min' in self.fo_min_max:
-                algoritmo_simplex.funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
+                mat_A, vet_b, coef_fo, var_CB, coef_CB, Cj_menos_Zj = algoritmo_simplex.funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
                     self.lista_todas_variaveis,
                     lista_nova_fo, #-> coeficiente_base_tableau_C_j
                     lista_nova_A, 
@@ -214,7 +214,7 @@ class Otimizador:
                     self.fo_min_max, 
                     )
             else:
-                algoritmo_simplex.funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
+                mat_A, vet_b, coef_fo, var_CB, coef_CB, Cj_menos_Zj = algoritmo_simplex.funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
                     self.lista_todas_variaveis,
                     lista_nova_fo, #-> coeficiente_base_tableau_C_j
                     lista_nova_A, 
@@ -224,7 +224,14 @@ class Otimizador:
                     vetor_C_j_menos_Z_j, 
                     self.calculo_visivel,
                     self.fo_min_max, 
-                    )            
+                    ) 
+        otimo_fo = sum(vet_b[i]*elemento_C_B for i, elemento_C_B in enumerate(coef_CB) )
+        dicionario_variaveis_coeficientes_C_B = {}
+        for i, variaveis in enumerate(var_CB):
+            dicionario_variaveis_coeficientes_C_B[variaveis] = coef_CB[i]
+        valores_variaveis =  [str(variavel)+':'+str(dicionario_variaveis_coeficientes_C_B[variavel]) for i, variavel in enumerate(dicionario_variaveis_coeficientes_C_B)]
+        dicionario_resultados_otimos = {'otimo f.o.=':otimo_fo, 'vetor decisao=': valores_variaveis, 'matriz A=': mat_A, 'vetor b=':vet_b, 'vetor c=':coef_fo}
+        return dicionario_resultados_otimos
 
 
     def simplex(self, calculo_visivel=True):
@@ -247,11 +254,12 @@ class Otimizador:
             print(mensagem_sobre_artificiais)
             # Resolve o Simplex e obtem os valores atualizados para posterior calculo da fase 2  
             lista_nova_A, lista_novo_b, lista_nova_fo, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j = self._calculo_simplex_fase1()
+            # Pedido de continuação
             pedido_continuacao = input('Finalizo a Fase 1. Deseja continuar para Fase2?(S/N)')
-            if pedido_continuacao is 'S':
+            if pedido_continuacao.lower()  == 's':
                 pass
             else:
-                quit()
+                exit()
             # Calculo da fase 2
             self._calculo_simplex_fase2(
                 lista_nova_A, 
