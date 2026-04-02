@@ -247,6 +247,11 @@ class Otimizador:
             print(mensagem_sobre_artificiais)
             # Resolve o Simplex e obtem os valores atualizados para posterior calculo da fase 2  
             lista_nova_A, lista_novo_b, lista_nova_fo, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j = self._calculo_simplex_fase1()
+            pedido_continuacao = input('Finalizo a Fase 1. Deseja continuar para Fase2?(S/N)')
+            if pedido_continuacao is 'S':
+                pass
+            else:
+                quit()
             # Calculo da fase 2
             self._calculo_simplex_fase2(
                 lista_nova_A, 
