@@ -4,20 +4,28 @@ def calculo_vetor_razao(lista_matriz_A, lista_coef_b, indice_maior_valor_C_j_Z_j
     for i, dividendo in enumerate(lista_coef_b):
         divisor = lista_matriz_A[i][indice_maior_valor_C_j_Z_j]
         if divisor == 0:
-            vetor_razao.append(0)
+            vetor_razao.append('desconsiderar')
         else:
             razao = dividendo / divisor
-            if razao >= 0:
-                vetor_razao.append(razao)
-            else:
-                vetor_razao.append(0)
+            vetor_razao.append(razao)
     # O minimo valor positivo define qual elemento sai da variaveis base, e qual variavel entra em C_B (fila pivo)
-    vetor_razao_sem0 = vetor_razao[:] # cria uma copia da lista_razao_sem0 principal
-    fun_valores_diferentes_de_zero = lambda x: x != 0 # considera somente valores diferentes de zero
-    vetor_razao_sem0 = list(filter(fun_valores_diferentes_de_zero, vetor_razao))
-    menor_valor_razao = min(vetor_razao_sem0)    
-    indice_menor_valor_razao = vetor_razao.index(menor_valor_razao)
-    fila_pivo =  vetor_variaveis_C_B[indice_menor_valor_razao] 
+    vetor_razao_semnegativo_sem0 = vetor_razao[:] # cria uma copia da lista_razao_sem0 principal
+    vetor_razao_semstring = vetor_razao[:]
+    fun_valores_maiores_zero_sem_string = lambda x: isinstance(x, (int, float)) and x > 0 # considera valores maiores a 0 e que nao sejam string 
+    vetor_razao_semnegativo_sem0 = list(filter(fun_valores_maiores_zero_sem_string, vetor_razao))
+    fun_valores_sem_string = lambda x: not isinstance(x,  (str)) 
+    vetor_razao_semstring = list(filter(fun_valores_sem_string, vetor_razao))
+    if len(vetor_razao_semnegativo_sem0) > 0: 
+        menor_valor_razao = min(vetor_razao_semnegativo_sem0)    
+        indice_menor_valor_razao = vetor_razao.index(menor_valor_razao)
+        fila_pivo =  vetor_variaveis_C_B[indice_menor_valor_razao] 
+    # caso de degeneração (vetor com 0's ou valores negativos. Pega o menos negativo)
+    # AINDA FALTA ADICIONAR REGRA DE BLAND: https://www.youtube.com/watch?v=tvYNdl9ssCM
+    else:
+        # AQUI SE PEGA O MENOS NEGATIVO (0 tem preferencia)
+        menor_valor_razao = max(vetor_razao_semstring)    
+        indice_menor_valor_razao = vetor_razao.index(menor_valor_razao)
+        fila_pivo =  vetor_variaveis_C_B[indice_menor_valor_razao]
     return vetor_razao, menor_valor_razao, fila_pivo
 
 
@@ -56,9 +64,13 @@ def funcao_C_j_e_C_B(definir_min_max, lista_todas_variaveis, lista_fo):
             else:
                 coeficiente_base_tableau_C_j.append(-lista_fo[i])
         elif 'a' in variavel:
-            coeficiente_base_tableau_C_j.append(-M)
+            if 'min' in definir_min_max:
+                coeficiente_base_tableau_C_j.append(-M)
+            else:
+                coeficiente_base_tableau_C_j.append(-M)
         else:
             coeficiente_base_tableau_C_j.append(0)
+    print('lista_todas_variaveis: ', lista_todas_variaveis)
     print('coeficiente_base_tableau_C_j: ', coeficiente_base_tableau_C_j)
 # 2. Cria-se vetor C_B que contenha as variaveis s_i, e a_i
     vetor_variaveis_C_B = []  
@@ -134,6 +146,7 @@ def funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
         ):
     lista_C_j_Z_j_evitar_infinito = []
     k=0
+    historico_lista_razao = set()
 # 1 Condicional que precisa todos os valores de C_j_menos_Z_j ser <= 0 para parar (otimizacao tipo maximizacao)
     while any(e > 0 for e in vetor_C_j_menos_Z_j):
         if calculo_visivel == True:
@@ -146,8 +159,21 @@ def funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
         # Pega indice de maior valor positivo para definir coluna pivo
         indice_maior_valor_C_j_Z_j = vetor_C_j_menos_Z_j.index(maior_valor_C_j_Z_j) 
         coluna_pivo = lista_todas_variaveis[indice_maior_valor_C_j_Z_j]
+        print('coluna pivo:', coluna_pivo)
 # 2 Obtencao do vetor razao e consequentemente fila pivo 
         vetor_razao, menor_valor_razao, fila_pivo = calculo_vetor_razao(lista_matriz_A, lista_coef_b, indice_maior_valor_C_j_Z_j, vetor_variaveis_C_B)
+        # Evitando infinito
+        print('vetor razao', vetor_razao)
+        if k==11:
+            break
+        
+        estado = tuple(vetor_razao)
+        if estado in historico_lista_razao:
+            print('''
+                  INFINITO DETECTADO
+                  ''')
+            break
+        historico_lista_razao.add(estado)
         if calculo_visivel == True:
             print('vetor_razao: ', vetor_razao)
             print('menor_valor_razao: ', menor_valor_razao)
@@ -180,6 +206,7 @@ def funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
             lista_matriz_A, 
             coeficiente_base_tableau_C_j, 
             vetor_coeficientes_C_B)
+        print('vetor_Z_j', vetor_Z_j)
         if calculo_visivel == True:
             print('vetor_C_j_menos_Z_j: \n \t', vetor_C_j_menos_Z_j)
         if funcao_valida_cotinuacao_fase1(lista_todas_variaveis, vetor_variaveis_C_B) is False:
@@ -193,13 +220,39 @@ def funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
     elif 'min' in min_ou_max:
         otimo_fo = -otimo_fo
         coeficientes_fo = [-coeficiente for coeficiente in coeficiente_base_tableau_C_j]
-    texto_fim_loop = f'''
+    # VALIDANDO SE FASE 1 OU 2
+    validador = None
+    lista_artificiais = [variavel for variavel in lista_todas_variaveis if 'a' in variavel]
+    if len(lista_artificiais):
+        validador = True
+    else: 
+        False
+    
+    dicionario_variaveis_coeficientes_C_B = {}
+    for i, variaveis in enumerate(vetor_variaveis_C_B):
+        dicionario_variaveis_coeficientes_C_B[variaveis] = lista_coef_b[i]
+    texto_fim_loop_fase1 = f'''
     -------------------------------------------------------
     -------------------------------------------------------
-    Fim do loop:
+    Fim do loop fase 1:
+    valores variaveis: \n {'\t'.join(str(variavel)+':'+str(dicionario_variaveis_coeficientes_C_B[variavel]) for i, variavel in enumerate(dicionario_variaveis_coeficientes_C_B))}
+    matriz_A:\n {'\n'.join( '\t' + str(linha) for linha in lista_matriz_A)}
+    vetor_b:\n \t {''.join(str(lista_coef_b))}
+    variaveis_c:\n \t {''.join(str(lista_todas_variaveis))}
+    \t {''.join(str(coeficiente_base_tableau_C_j))}
+    * Estao sendo incluidas as colunas das variaveis artificiais
+    '''
+
+    texto_fim_loop_fase2 = f'''
+    -------------------------------------------------------
+    -------------------------------------------------------
+    Fim do loop fase 2:
     otimo da fo: {otimo_fo}
     valores f.o.: \n\t{''.join(str(coeficientes_fo))}
     matriz_A:\n {'\n'.join( '\t' + str(linha) for linha in lista_matriz_A)}
     vetor_b:\n \t {''.join(str(lista_coef_b))}'''
-    print(texto_fim_loop)
+    if validador == True:
+        print(texto_fim_loop_fase1)    
+    else: 
+        print(texto_fim_loop_fase2)
     return lista_matriz_A, lista_coef_b, coeficiente_base_tableau_C_j, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j 
