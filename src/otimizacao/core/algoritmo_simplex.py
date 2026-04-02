@@ -184,9 +184,13 @@ def funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
         if calculo_visivel == True:
             print('novo vetor variaveis C_B: ', vetor_variaveis_C_B)
             print('novo vetor C_B: ', vetor_coeficientes_C_B)
+        if funcao_valida_cotinuacao_fase1(lista_todas_variaveis, vetor_variaveis_C_B) is False:
+            print('As variáveis "a" sairam da base C_B. Finaliza a fase 1.')
+            break
+        if calculo_visivel == True:
             print('matriz_A:\n', '\n'.join( '\t'+str(fila) for fila in lista_matriz_A))
             print('vetor b:\n \t', lista_coef_b)
-            print('\n     # Inicia iteracao: ')
+        print('\n     # Inicia iteracao: ')
 # 3 Atualiza-se a matriz A e vetor b
         lista_matriz_A, lista_coef_b, vetor_coeficientes_C_B = funcao_calculo_iteracoes(
             lista_todas_variaveis, 
@@ -209,8 +213,6 @@ def funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
         print('vetor_Z_j', vetor_Z_j)
         if calculo_visivel == True:
             print('vetor_C_j_menos_Z_j: \n \t', vetor_C_j_menos_Z_j)
-        if funcao_valida_cotinuacao_fase1(lista_todas_variaveis, vetor_variaveis_C_B) is False:
-            break
 
         k+=1
 # 5 Calcula otimo da f.o.= c_{j}*x_{j}

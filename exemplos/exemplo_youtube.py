@@ -1,7 +1,7 @@
 from otimizacao import Otimizador
 
 otimizacao_emilio = Otimizador()
-# EXEMPLO YOUTUBE
+# EXEMPLO YOUTUBE: https://www.youtube.com/watch?v=btjxqq-vMOg&t=300s
 otimizacao_emilio.adicionar_funcao_objetivo('max. + 6x_1 - 7x_2 - 4x_3')
 otimizacao_emilio.adicionar_restricao('+ 2x_1 + 5x_2 - 1x_3 <= 18')
 otimizacao_emilio.adicionar_restricao('- 1x_1 + 1x_2 + 2x_3 >= 14')
