@@ -73,8 +73,8 @@ def funcao_C_j_e_C_B(definir_min_max, lista_todas_variaveis, lista_fo):
                 coeficiente_base_tableau_C_j.append(-M)
         else:
             coeficiente_base_tableau_C_j.append(0)
-    print('lista_todas_variaveis: ', lista_todas_variaveis)
-    print('coeficiente_base_tableau_C_j: ', coeficiente_base_tableau_C_j)
+    logger.info(f'lista_todas_variaveis:  {lista_todas_variaveis}')
+    logger.info(f'coeficiente_base_tableau_C_j  {coeficiente_base_tableau_C_j}')
 # 2. Cria-se vetor C_B que contenha as variaveis s_i, e a_i
     vetor_variaveis_C_B = []  
     for variavel in lista_todas_variaveis:
@@ -82,13 +82,13 @@ def funcao_C_j_e_C_B(definir_min_max, lista_todas_variaveis, lista_fo):
             vetor_variaveis_C_B.append(variavel)
         elif 'a' in variavel:
             vetor_variaveis_C_B.append(variavel)
-    print('vetor_variaveis_C_B: ', vetor_variaveis_C_B)
+    logger.info(f'vetor_variaveis_C_B: {vetor_variaveis_C_B}')
 # 3 Define-se o vetor valores C_B baseado nos valores de s_i, e a_i
     vetor_coeficientes_C_B = []
     for i, variavel in enumerate(lista_todas_variaveis):
         if variavel in vetor_variaveis_C_B:
             vetor_coeficientes_C_B.append(coeficiente_base_tableau_C_j[i])
-    print('vetor_coeficientes_C_B: ', vetor_coeficientes_C_B)
+    logger.info(f'Vetor_coeficientes_C_B:  {vetor_coeficientes_C_B}')
     return coeficiente_base_tableau_C_j, vetor_variaveis_C_B, vetor_coeficientes_C_B
 
 
@@ -98,7 +98,7 @@ def funcao_calculo_iteracoes(lista_todas_variaveis, lista_matriz_A, lista_coef_b
     indice_coluna_pivo = lista_todas_variaveis.index(coluna_pivo) # lembrando que eh o valor da coluna que substitui o valor da fila
     indice_fila_pivo = vetor_variaveis_C_B.index(coluna_pivo)
     valor_pivo = lista_matriz_A[indice_fila_pivo][indice_coluna_pivo]
-    print('valor pivo',valor_pivo)
+    logger.info(f'Valor pivo{valor_pivo}')
 # 2 Percorre a fila pivo atualizando-a (o elemento pivo deve virar '1')
     for j, elemento_fila in enumerate(lista_matriz_A[indice_fila_pivo]):
         valor_pivo_substituir = float(elemento_fila / valor_pivo)
@@ -175,16 +175,16 @@ def funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
                   ''')
             break
         historico_lista_razao.add(estado)
-        # logger.info(f'''Vetor razao: {vetor_razao}
-        # Menor valor razao: {menor_valor_razao}
-        # Vetor variaveis C_B: {vetor_variaveis_C_B}
-        # Vetor coeficientes C_B: {vetor_coeficientes_C_B}''')    
+        logger.info(f'''Vetor razao: {vetor_razao}
+        Menor valor razao: {menor_valor_razao}
+        Vetor variaveis C_B: {vetor_variaveis_C_B}
+        Vetor coeficientes C_B: {vetor_coeficientes_C_B}''')    
 # 3 Atualizam-se as variaveis e valores do vetor C_B        
         vetor_variaveis_C_B, vetor_coeficientes_C_B = atualizacao_coef_vetor_C_B(lista_todas_variaveis, coeficiente_base_tableau_C_j, vetor_variaveis_C_B, vetor_coeficientes_C_B, fila_pivo, coluna_pivo)
         logger.info(f'novo vetor variaveis C_B: {vetor_variaveis_C_B}')
         logger.info(f'novo vetor C_B: {vetor_coeficientes_C_B}')
         if funcao_valida_cotinuacao_fase1(lista_todas_variaveis, vetor_variaveis_C_B) is False:
-            print('As variáveis "a" sairam da base C_B. Finaliza a fase 1.')
+            logger.info('As variáveis "a" sairam da base C_B. Finaliza a fase 1.')
             break
         logger.info(f'''matriz_A:\n{'\n'.join( '\t'+str(fila) for fila in lista_matriz_A)})
                     vetor b:\n \t', {lista_coef_b}

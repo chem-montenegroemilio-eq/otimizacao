@@ -11,6 +11,7 @@ def configuracao_logging(calculo_visivel: bool):
         level = level,
         format="%(message)s,"
     )
+logger = logging.getLogger(__name__)
 
 class Otimizador:
     """
@@ -47,7 +48,7 @@ class Otimizador:
                           restricoes: str):
         """Faz tratamento dos strings e converte-os em vetores e matrices para resolver o problema de otimizacao"""
         # Define-se a f.o.: min. ou max. e separa do string da equacao
-        print(funcao_objetivo)
+        logger.info(funcao_objetivo)
         substituir_ponto = funcao_objetivo.find('.')
         funcao_objetivo = funcao_objetivo[:substituir_ponto] + '|' + funcao_objetivo[substituir_ponto+1:]
         self.fo_min_max, fo_equacao = funcao_objetivo.split('|')
@@ -79,10 +80,10 @@ class Otimizador:
         print('O problema tem a seguinte forma vetorial e matricial.')
         lista_matriz_A, lista_coef_b = self._tratamento_dados(self.funcao_objetivo, self.restricoes)
         print(
-            'VARIAVEIS:', self.lista_todas_variaveis,
-            '\nVETOR FUNÇÃO OBJETIVO:', self.lista_fo,
-            '\nMATRIZ A:\n' + '\n'.join( '\t'+str(linha) for linha in lista_matriz_A),
-            '\nVETOR b:\n' + ''.join(str(lista_coef_b))
+            f'''VARIAVEIS:', {self.lista_todas_variaveis},
+            '\nVETOR FUNÇÃO OBJETIVO:', {self.lista_fo},
+            '\nMATRIZ A:{ '\n'.join( '\t'+str(linha) for linha in lista_matriz_A)},
+            '\nVETOR b:{''.join(str(lista_coef_b))}'''
             )
     
 
@@ -101,7 +102,8 @@ class Otimizador:
     def _determinador(self):
         """Baseado nas variaveis artificiais, determina se precisa passar pela fase 1 (True) ou nao (False)."""
         fase1_true_fase2_false = determinador_fase.funcao_caso_haja_variaveis_artificias(self.lista_todas_variaveis)
-        if fase1_true_fase2_false == True:
+        if fase1_true_fase2_false != False:
+            logger.info(f'Existem variaveis artificiais:{fase1_true_fase2_false}') 
             return True
         else:
             return False
@@ -109,7 +111,7 @@ class Otimizador:
 
     def _calculo_simplex_fase1(self):
         """Utilizando as listas dos vetores/matrices resolve o problema simplex de vertice otimo."""
-        print('''
+        logger.info('''
               -------------------------
               -------------------------
               Inicializa fase 1
@@ -157,7 +159,7 @@ class Otimizador:
         vetor_coeficientes_C_B, 
         vetor_C_j_menos_Z_j,
         ):
-        print('''
+        logger.info('''
               -------------------------
               -------------------------
               Inicializa fase 2
@@ -251,7 +253,7 @@ class Otimizador:
             Porque o problema possui restricoes "=" ou ">=", então será resolvida a Fase 1, com variaveis artificiais "a".
             Depois pela Fase 2.
             '''  
-            print(mensagem_sobre_artificiais)
+            logger.info(mensagem_sobre_artificiais)
             # Resolve o Simplex e obtem os valores atualizados para posterior calculo da fase 2  
             lista_nova_A, lista_novo_b, lista_nova_fo, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j = self._calculo_simplex_fase1()
             # Pedido de continuação
@@ -271,7 +273,7 @@ class Otimizador:
                 )
         ## Caso possua somente variaveis de folga (tipo <=)
         else:     
-            print('---\n---\nO problema precisa ser resolvido apenas pela Fase 2.\n---\n---')    
+            logger.info('---\n---\nO problema precisa ser resolvido apenas pela Fase 2.\n---\n---')    
             # print(self.__dict__)
             lista_matriz_A, lista_coef_b = self._tratamento_dados(self.funcao_objetivo, self.restricoes)
             coeficientes_fo, vetor_variaveis_C_B, vetor_coeficientes_C_B = algoritmo_simplex.funcao_C_j_e_C_B(self.fo_min_max, self.lista_todas_variaveis, self.lista_fo)
