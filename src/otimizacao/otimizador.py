@@ -1,8 +1,16 @@
 from typing import List
+import logging
 from .core import parser  
 from .core import determinador_fase
 from .core import algoritmo_simplex
 from .exemplo_Simplex import executar
+
+def configuracao_logging(calculo_visivel: bool):
+    level = logging.INFO if calculo_visivel else logging.WARNING
+    logging.basicConfig(
+        level = level,
+        format="%(message)s,"
+    )
 
 class Otimizador:
     """
@@ -12,7 +20,7 @@ class Otimizador:
                 funcao_objetivo=None,
                 restricoes=None,
                 fo_min_max = None,
-                calculo_visivel = None):
+                ):
         """
         Args:
             funcao_objetivo (str): funcao objetivo a minimizar ou maximizar.
@@ -21,7 +29,6 @@ class Otimizador:
         self.funcao_objetivo = None
         self.restricoes: List[str] = []
         self.fo_min_max = None
-        self.calculo_visivel = None
 
     def adicionar_funcao_objetivo(self, 
                                   funcao_objetivo:str):
@@ -125,7 +132,6 @@ class Otimizador:
                 vetor_variaveis_C_B, 
                 vetor_coeficientes_C_B, 
                 vetor_C_j_menos_Z_j,
-                self.calculo_visivel,
                 self.fo_min_max, 
                 )
         else:
@@ -137,7 +143,6 @@ class Otimizador:
                 vetor_variaveis_C_B, 
                 vetor_coeficientes_C_B, 
                 vetor_C_j_menos_Z_j,
-                self.calculo_visivel,
                 self.fo_min_max, 
                 )
         return lista_nova_A, lista_novo_b, lista_fo, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j
@@ -151,7 +156,6 @@ class Otimizador:
         vetor_variaveis_C_B, 
         vetor_coeficientes_C_B, 
         vetor_C_j_menos_Z_j,
-        calculo_visivel,
         ):
         print('''
               -------------------------
@@ -184,7 +188,6 @@ class Otimizador:
                     vetor_variaveis_C_B, 
                     vetor_coeficientes_C_B, 
                     vetor_C_j_menos_Z_j,
-                    self.calculo_visivel,
                     self.fo_min_max,  
                     )
             else:
@@ -196,7 +199,6 @@ class Otimizador:
                     vetor_variaveis_C_B, 
                     vetor_coeficientes_C_B, 
                     vetor_C_j_menos_Z_j,
-                    self.calculo_visivel,
                     self.fo_min_max,  
                     )
         # Resolve para o caso que somente haja variaveis tipo 's'
@@ -210,7 +212,6 @@ class Otimizador:
                     vetor_variaveis_C_B, 
                     vetor_coeficientes_C_B, 
                     vetor_C_j_menos_Z_j,
-                    self.calculo_visivel,
                     self.fo_min_max, 
                     )
             else:
@@ -222,7 +223,6 @@ class Otimizador:
                     vetor_variaveis_C_B, 
                     vetor_coeficientes_C_B, 
                     vetor_C_j_menos_Z_j, 
-                    self.calculo_visivel,
                     self.fo_min_max, 
                     ) 
         otimo_fo = sum(vet_b[i]*elemento_C_B for i, elemento_C_B in enumerate(coef_CB) )
@@ -236,7 +236,7 @@ class Otimizador:
 
     def simplex(self, calculo_visivel=True):
         if self.funcao_objetivo is None and self.restricoes == []:
-            self.funcao_objetivo, self.restricoes, self.calculo_visivel = executar()
+            self.funcao_objetivo, self.restricoes = executar()
         elif self.funcao_objetivo is not None and self.restricoes == []:
             raise ValueError('Faltou adicionar função objetivo.')
         elif self.funcao_objetivo is None and self.restricoes != []:
@@ -244,7 +244,7 @@ class Otimizador:
         """Determina a fase e retorna os valores resolvidos pelo metodo simplex."""
         self._tratamento_dados(self.funcao_objetivo, self.restricoes)
         # Para exibir os calculos
-        self.calculo_visivel = calculo_visivel
+        configuracao_logging(calculo_visivel)
         ## Caso possua variaveis artificias (tipo == e/ou >=)
         if self._determinador() == True:    
             mensagem_sobre_artificiais = '''
@@ -261,14 +261,13 @@ class Otimizador:
             else:
                 exit()
             # Calculo da fase 2
-            self._calculo_simplex_fase2(
+            dicionario_resultados = self._calculo_simplex_fase2(
                 lista_nova_A, 
                 lista_novo_b, 
                 lista_nova_fo, # -> coeficiente_base_tableau_C_j
                 vetor_variaveis_C_B, 
                 vetor_coeficientes_C_B, 
                 vetor_C_j_menos_Z_j,
-                self.calculo_visivel,
                 )
         ## Caso possua somente variaveis de folga (tipo <=)
         else:     
@@ -277,12 +276,12 @@ class Otimizador:
             lista_matriz_A, lista_coef_b = self._tratamento_dados(self.funcao_objetivo, self.restricoes)
             coeficientes_fo, vetor_variaveis_C_B, vetor_coeficientes_C_B = algoritmo_simplex.funcao_C_j_e_C_B(self.fo_min_max, self.lista_todas_variaveis, self.lista_fo)
             vetor_Z_j, vetor_C_j_menos_Z_j = algoritmo_simplex.funcao_calculo_Z_j_e_Z_j_menos_C_j(self.lista_todas_variaveis, lista_matriz_A, coeficientes_fo, vetor_coeficientes_C_B)
-            self._calculo_simplex_fase2(
+            dicionario_resultados = self._calculo_simplex_fase2(
                 lista_matriz_A, 
                 lista_coef_b, 
                 coeficientes_fo, # -> coeficiente_base_tableau_C_j
                 vetor_variaveis_C_B, 
                 vetor_coeficientes_C_B, 
                 vetor_C_j_menos_Z_j,
-                self.calculo_visivel,
                 )
+        return dicionario_resultados

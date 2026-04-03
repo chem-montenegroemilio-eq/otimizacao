@@ -23,4 +23,4 @@ def executar():
                 '+ 20x_1 + 5x_2 + 10x_3 + 2x_4 <= 200',
                 '+ 10x_1 + 20x_2 + 20x_3 + 15x_4 >= 80']
     calculo_visivel = False
-    return fo, restricoes, calculo_visivel
+    return fo, restricoes

@@ -1,3 +1,6 @@
+import logging
+logger = logging.getLogger(__name__)
+
 ### Funcao que calcula a razao entre a coluna pivo e o seu correspondente b (vetor_b ou lista_coef_b) sendo b_{i}/A_{i,coluna_pivo} somente para valores>0. Valores<0 sao definidos como '0'.
 def calculo_vetor_razao(lista_matriz_A, lista_coef_b, indice_maior_valor_C_j_Z_j, vetor_variaveis_C_B): 
     vetor_razao = []
@@ -141,7 +144,6 @@ def funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
         vetor_variaveis_C_B, 
         vetor_coeficientes_C_B, 
         vetor_C_j_menos_Z_j,
-        calculo_visivel=True,
         min_ou_max=str,
         ):
     lista_C_j_Z_j_evitar_infinito = []
@@ -149,48 +151,44 @@ def funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
     historico_lista_razao = set()
 # 1 Condicional que precisa todos os valores de C_j_menos_Z_j ser <= 0 para parar (otimizacao tipo maximizacao)
     while any(e > 0 for e in vetor_C_j_menos_Z_j):
-        if calculo_visivel == True:
-            print('-------------------------------------------------------------------------------------')
-            print(f'# Inicia loop n°{k+1}')
-            print('vetor C_j_menos_Z_j:\n\t', vetor_C_j_menos_Z_j)
+        logger.info(f'''-------------------------------------------------------------------------------------
+        \tInicia loop n°{k+1}
+        'Vetor C_j_menos_Z_j:\n\t', {vetor_C_j_menos_Z_j}''')
         # PRECISA REDEFINIR (CRIAR FUNCAO?) - Evita loop infinito e outorga maior valor positivo de C_j-Z_j 
         lista_C_j_Z_j_evitar_infinito.append(tuple(vetor_C_j_menos_Z_j))
         maior_valor_C_j_Z_j = max(vetor_C_j_menos_Z_j)
         # Pega indice de maior valor positivo para definir coluna pivo
         indice_maior_valor_C_j_Z_j = vetor_C_j_menos_Z_j.index(maior_valor_C_j_Z_j) 
         coluna_pivo = lista_todas_variaveis[indice_maior_valor_C_j_Z_j]
-        print('coluna pivo:', coluna_pivo)
+        logger.info(f'Coluna pivo: {coluna_pivo}')
 # 2 Obtencao do vetor razao e consequentemente fila pivo 
         vetor_razao, menor_valor_razao, fila_pivo = calculo_vetor_razao(lista_matriz_A, lista_coef_b, indice_maior_valor_C_j_Z_j, vetor_variaveis_C_B)
         # Evitando infinito
-        print('vetor razao', vetor_razao)
+        logger.info(f'vetor razao {vetor_razao}')
         if k==11:
             break
         
         estado = tuple(vetor_razao)
         if estado in historico_lista_razao:
-            print('''
-                  INFINITO DETECTADO
+            logger.info(f'''
+                  \tINFINITO DETECTADO!
                   ''')
             break
         historico_lista_razao.add(estado)
-        if calculo_visivel == True:
-            print('vetor_razao: ', vetor_razao)
-            print('menor_valor_razao: ', menor_valor_razao)
-            print('vetor variaveis C_B: ', vetor_variaveis_C_B)
-            print('vetor_coeficientes_C_B: ', vetor_coeficientes_C_B)    
+        # logger.info(f'''Vetor razao: {vetor_razao}
+        # Menor valor razao: {menor_valor_razao}
+        # Vetor variaveis C_B: {vetor_variaveis_C_B}
+        # Vetor coeficientes C_B: {vetor_coeficientes_C_B}''')    
 # 3 Atualizam-se as variaveis e valores do vetor C_B        
         vetor_variaveis_C_B, vetor_coeficientes_C_B = atualizacao_coef_vetor_C_B(lista_todas_variaveis, coeficiente_base_tableau_C_j, vetor_variaveis_C_B, vetor_coeficientes_C_B, fila_pivo, coluna_pivo)
-        if calculo_visivel == True:
-            print('novo vetor variaveis C_B: ', vetor_variaveis_C_B)
-            print('novo vetor C_B: ', vetor_coeficientes_C_B)
+        logger.info(f'novo vetor variaveis C_B: {vetor_variaveis_C_B}')
+        logger.info(f'novo vetor C_B: {vetor_coeficientes_C_B}')
         if funcao_valida_cotinuacao_fase1(lista_todas_variaveis, vetor_variaveis_C_B) is False:
             print('As variáveis "a" sairam da base C_B. Finaliza a fase 1.')
             break
-        if calculo_visivel == True:
-            print('matriz_A:\n', '\n'.join( '\t'+str(fila) for fila in lista_matriz_A))
-            print('vetor b:\n \t', lista_coef_b)
-        print('\n     # Inicia iteracao: ')
+        logger.info(f'''matriz_A:\n{'\n'.join( '\t'+str(fila) for fila in lista_matriz_A)})
+                    vetor b:\n \t', {lista_coef_b}
+                    '\n     # Inicia iteracao: ''')
 # 3 Atualiza-se a matriz A e vetor b
         lista_matriz_A, lista_coef_b, vetor_coeficientes_C_B = funcao_calculo_iteracoes(
             lista_todas_variaveis, 
@@ -200,19 +198,17 @@ def funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
             vetor_coeficientes_C_B, 
             coluna_pivo
             )
-        if calculo_visivel == True:
-            print('matriz A tratada:\n' + '\n'.join('\t'+str(fila) for fila in lista_matriz_A))
-            print('vetor_b tratado:\n \t', lista_coef_b)    
-            print('\n     # Inicia calculo Z_j_e_Z_j_menos_C_j')
+        logger.info(f'''matriz A tratada:\n' + {'\n'.join('\t'+str(fila) for fila in lista_matriz_A)}
+                    vetor_b tratado:\n \t', {lista_coef_b})    
+                    \n     # Inicia calculo Z_j_e_Z_j_menos_C_j''')
 # 4 Calcula Z_j e C_j-Z_j baseado nas variaveis e coeficientes da f.o. (C_j), na matriz A, e vetor C_B 
         vetor_Z_j, vetor_C_j_menos_Z_j = funcao_calculo_Z_j_e_Z_j_menos_C_j(
             lista_todas_variaveis, 
             lista_matriz_A, 
             coeficiente_base_tableau_C_j, 
             vetor_coeficientes_C_B)
-        print('vetor_Z_j', vetor_Z_j)
-        if calculo_visivel == True:
-            print('vetor_C_j_menos_Z_j: \n \t', vetor_C_j_menos_Z_j)
+        logger.info(f'vetor_Z_j {vetor_Z_j}')
+        logger.info(f'vetor_C_j_menos_Z_j: {vetor_C_j_menos_Z_j}')
 
         k+=1
 # 5 Calcula otimo da f.o.= c_{j}*x_{j}
@@ -254,7 +250,7 @@ def funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
     matriz_A:\n {'\n'.join( '\t' + str(linha) for linha in lista_matriz_A)}
     vetor_b:\n \t {''.join(str(lista_coef_b))}'''
     if validador == True:
-        print(texto_fim_loop_fase1)    
+        logger.info(texto_fim_loop_fase1)    
     else: 
-        print(texto_fim_loop_fase2)
+        logger.info(texto_fim_loop_fase2)
     return lista_matriz_A, lista_coef_b, coeficiente_base_tableau_C_j, vetor_variaveis_C_B, vetor_coeficientes_C_B, vetor_C_j_menos_Z_j 
