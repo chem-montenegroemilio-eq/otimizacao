@@ -105,7 +105,8 @@ class Otimizador:
         """Baseado nas variaveis artificiais, determina se precisa passar pela fase 1 (True) ou nao (False)."""
         fase1_true_fase2_false = determinador_fase.funcao_caso_haja_variaveis_artificias(self.lista_todas_variaveis)
         if fase1_true_fase2_false != False:
-            logger.info(f'\nExistem {len(fase1_true_fase2_false)} variaveis artificiais: {' '.join(f"{variavel_artificial}," if len(fase1_true_fase2_false) != (fase1_true_fase2_false.index(variavel_artificial)+1) else f"{variavel_artificial}." for i, variavel_artificial in enumerate(fase1_true_fase2_false) )}') 
+            texto_variaveis = ' '.join(f"{variavel_artificial}," if len(fase1_true_fase2_false) != (fase1_true_fase2_false.index(variavel_artificial)+1) else f"{variavel_artificial}." for i, variavel_artificial in enumerate(fase1_true_fase2_false) ) 
+            logger.info(f"\nExistem {len(fase1_true_fase2_false)} variaveis artificiais: {texto_variaveis}") 
             return True
         else:
             return False
