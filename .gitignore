@@ -20,3 +20,14 @@ Thumbs.db
 
 # Arquivos sensíveis
 .env
+
+# VS Code
+.vscode/
+
+# IDEs
+.idea/
+
+# Coverage / testes
+.coverage
+htmlcov/
+.pytest_cache/
