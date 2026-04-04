@@ -244,6 +244,7 @@ Vetor b tratado:\n \t{[round(coef, 2) for coef in lista_coef_b]})
     dicionario_variaveis_coeficientes_C_B = {}
     for i, variaveis in enumerate(vetor_variaveis_C_B):
         dicionario_variaveis_coeficientes_C_B[variaveis] = lista_coef_b[i]
+    matriz_A_formatada = '\n\t\t\t'.join( '  ' + str([round(elemento,2) for elemento in linha]) for linha in lista_matriz_A)
     texto_fim_loop_fase1 = f'''
 \t\t\t-------------------------------------------------------
 \t\t\t-------------------------------------------------------
@@ -251,7 +252,7 @@ Vetor b tratado:\n \t{[round(coef, 2) for coef in lista_coef_b]})
 \t\t\t-------------------------------------------------------
 \t\t\t-------------------------------------------------------
 \t\t\tValores variaveis: \n\t\t\t\t {'  '.join(str(variavel)+':'+str(round(dicionario_variaveis_coeficientes_C_B[variavel],2)) for i, variavel in enumerate(dicionario_variaveis_coeficientes_C_B))}
-\t\t\tMatriz A:\n\t\t\t{'\n\t\t\t'.join( '  ' + str([round(elemento,2) for elemento in linha]) for linha in lista_matriz_A)}
+\t\t\tMatriz A:\n\t\t\t{matriz_A_formatada}
 \t\t\tVetor b:\n\t\t\t  {''.join(str([round(coef,3) for coef in lista_coef_b]))}
 \t\t\tVariaveis junto com os coeficientes c_j:\n\t\t\t  {''.join(str(lista_todas_variaveis))}
 \t\t {''.join(str(coeficiente_base_tableau_C_j))}
@@ -267,7 +268,7 @@ Vetor b tratado:\n \t{[round(coef, 2) for coef in lista_coef_b]})
 \t\t\tOtimo da fo: {round(otimo_fo,2)}
 \t\t\tVetor decisao otimo: \n\t\t\t  {' '.join(str(vetor_variaveis_C_B[::-1][i])+'='+str(round(coeficiente,2))+',' for i, coeficiente in enumerate(lista_coef_b[::-1])) }
 \t\t\t  {' '.join(str(variavel)+'='+ '0' +',' for variavel in lista_todas_variaveis if variavel not in vetor_variaveis_C_B  ) }
-\t\t\tMatriz_A:\n\t\t\t{'\n\t\t\t'.join( '  ' + str([round(elemento,2) for elemento in linha]) for linha in lista_matriz_A)}
+\t\t\tMatriz_A:\n\t\t\t{matriz_A_formatada}
 \t\t\tVetor_b:\n\t\t\t  {''.join(str([round(coef,2) for coef in lista_coef_b]))}'''
     if validador == True:
         logger.info(texto_fim_loop_fase1)    
