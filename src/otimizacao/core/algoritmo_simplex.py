@@ -185,9 +185,12 @@ def funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
         logger.info(f'''Vetor razao: {vetor_razao_printar}, com menor valor razao de {round(menor_valor_razao, 2)}
 Das variaveis C_B tem-se {' '.join(f'{variavel}:{vetor_coeficientes_C_B[i]},'if not 'a' in variavel else f'{variavel}:M,' for i, variavel in enumerate(vetor_variaveis_C_B) )}''')    
 # 3 Atualizam-se as variaveis e valores do vetor C_B        
-        logger.info(f'A variavel {fila_pivo} eh substituida pela variavel {coluna_pivo}')
         vetor_variaveis_C_B, vetor_coeficientes_C_B = atualizacao_coef_vetor_C_B(lista_todas_variaveis, coeficiente_base_tableau_C_j, vetor_variaveis_C_B, vetor_coeficientes_C_B, fila_pivo, coluna_pivo)
-        logger.info(f'Novo vetor variaveis C_B: \n\t{vetor_variaveis_C_B}')
+        if fila_pivo == coluna_pivo:
+            pass
+        else:
+            logger.info(f'A variavel {fila_pivo} eh substituida pela variavel {coluna_pivo}')
+            logger.info(f'Novo vetor variaveis C_B: \n\t{vetor_variaveis_C_B}')
         # logger.info(f'Novo vetor C_B: {vetor_coeficientes_C_B}')
         if funcao_valida_cotinuacao_fase1(lista_todas_variaveis, vetor_variaveis_C_B) is False:
             logger.info('As variáveis "a" sairam da base C_B. Finaliza a fase 1.')
@@ -250,7 +253,7 @@ Vetor b tratado:\n \t{[round(coef, 2) for coef in lista_coef_b]})
 \t\t\tVetor b:\n\t\t\t  {''.join(str([round(coef,3) for coef in lista_coef_b]))}
 \t\t\tVariaveis junto com os coeficientes c_j:\n\t\t\t  {''.join(str(lista_todas_variaveis))}
 \t\t {''.join(str(coeficiente_base_tableau_C_j))}
-* Estao sendo incluidas as colunas das variaveis artificiais
+* Estao sendo incluidas as colunas das variaveis artificiais. Para Simplex Fase 2 devem ser tiradas.
 '''
 
     texto_fim_loop_fase2 = f'''

@@ -273,7 +273,10 @@ Depois pela Fase 2.'''
                 )
         ## Caso possua somente variaveis de folga (tipo <=)
         else:     
-            logger.info('---\n---\nO problema precisa ser resolvido apenas pela Fase 2.\n---\n---')    
+            logger.info('''\t\t-------------------------------------------------------------------
+\t\t|\t\t     Restricoes do tipo '<='.                     |
+\t\t|\tO problema precisa ser resolvido apenas pela Fase 2.      |
+\t\t-------------------------------------------------------------------''')    
             # print(self.__dict__)
             lista_matriz_A, lista_coef_b = self._tratamento_dados(self.funcao_objetivo, self.restricoes)
             coeficientes_fo, vetor_variaveis_C_B, vetor_coeficientes_C_B = algoritmo_simplex.funcao_C_j_e_C_B(self.fo_min_max, self.lista_todas_variaveis, self.lista_fo)
