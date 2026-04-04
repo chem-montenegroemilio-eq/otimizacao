@@ -85,7 +85,7 @@ class Otimizador:
             f'''VARIAVEIS:, {self.lista_todas_variaveis},
             \nVETOR FUNÇÃO OBJETIVO:, {self.lista_fo},
             \nMATRIZ A:{matriz_A_formatada},
-            \nVETOR b:{''.join(str(lista_coef_b))}'''
+            \nVETOR b:{lista_coef_b}'''
             )
     
 
