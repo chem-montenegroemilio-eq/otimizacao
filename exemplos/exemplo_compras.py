@@ -18,4 +18,5 @@ otimizacao_emilio.adicionar_restricao('+ 1x_1 +  1x_3 + 1x_2 + 1x_4 + 5x_5 == 25
 otimizacao_emilio.adicionar_restricao('+ 20x_1 +  10x_3 + 5x_2 + 2x_4 + 250x_5 <= 500')
 otimizacao_emilio.adicionar_restricao('+ 10x_1  + 20x_3 + 20x_2 +  15x_4 - 50x_5 >= 50')
 otimizacao_emilio.adicionar_restricao('+ 0x_1  + 0x_3 + 0x_2 + 0x_4 + 1x_5 <= 1')
-otimizacao_emilio.simplex(calculo_visivel=True)
+# otimizacao_emilio.simplex(calculo_visivel=False)
+print(otimizacao_emilio.simplex(calculo_visivel=False))

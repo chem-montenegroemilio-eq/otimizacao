@@ -231,11 +231,17 @@ class Otimizador:
                     self.fo_min_max, 
                     ) 
         otimo_fo = sum(vet_b[i]*elemento_C_B for i, elemento_C_B in enumerate(coef_CB) )
+        if 'min' in self.fo_min_max:
+            otimo_fo = -otimo_fo
         dicionario_variaveis_coeficientes_C_B = {}
         for i, variaveis in enumerate(var_CB):
-            dicionario_variaveis_coeficientes_C_B[variaveis] = coef_CB[i]
-        valores_variaveis =  [str(variavel)+':'+str(dicionario_variaveis_coeficientes_C_B[variavel]) for i, variavel in enumerate(dicionario_variaveis_coeficientes_C_B)]
-        dicionario_resultados_otimos = {'otimo f.o.=':otimo_fo, 'vetor decisao=': valores_variaveis, 'matriz A=': mat_A, 'vetor b=':vet_b, 'vetor c=':coef_fo}
+            dicionario_variaveis_coeficientes_C_B[variaveis] = vet_b[i]
+        lista_valores_variaveis =  [str(variavel)+':'+str(dicionario_variaveis_coeficientes_C_B[variavel]) for i, variavel in enumerate(dicionario_variaveis_coeficientes_C_B)][::-1]
+        if 'min' in self.fo_min_max:
+            coef_fo = [coef if not 'x' in self.lista_todas_variaveis[i] else -coef for i, coef in enumerate(coef_fo)]
+        else:
+            pass
+        dicionario_resultados_otimos = {'otimo f.o.=':otimo_fo, 'vetor decisao=': lista_valores_variaveis, 'Variaveis=': self.lista_todas_variaveis, 'Vetor c=': coef_fo, 'matriz A=': mat_A, 'vetor b=':vet_b}
         return dicionario_resultados_otimos
 
 
@@ -263,9 +269,14 @@ Depois pela Fase 2.'''
             if pedido_continuacao.lower()  == 's':
                 pass
             else:
-                exit()
+                if 'min' in self.fo_min_max:
+                    lista_nova_fo_tratado = [coef if not 'x' in self.lista_todas_variaveis[i] else -coef for i, coef in enumerate(lista_nova_fo)]
+                else:
+                    lista_nova_fo_tratado = lista_nova_fo
+                dicionario_fase1 = {'Variaveis=': self.lista_todas_variaveis , 'Vetor c=': lista_nova_fo_tratado, 'Matriz A=':lista_nova_A, 'Vetor b=':lista_novo_b}
+                return dicionario_fase1
             # Calculo da fase 2
-            dicionario_resultados = self._calculo_simplex_fase2(
+            dicionario_fase2 = self._calculo_simplex_fase2(
                 lista_nova_A, 
                 lista_novo_b, 
                 lista_nova_fo, # -> coeficiente_base_tableau_C_j
@@ -283,7 +294,7 @@ Depois pela Fase 2.'''
             lista_matriz_A, lista_coef_b = self._tratamento_dados(self.funcao_objetivo, self.restricoes)
             coeficientes_fo, vetor_variaveis_C_B, vetor_coeficientes_C_B = algoritmo_simplex.funcao_C_j_e_C_B(self.fo_min_max, self.lista_todas_variaveis, self.lista_fo)
             vetor_Z_j, vetor_C_j_menos_Z_j = algoritmo_simplex.funcao_calculo_Z_j_e_Z_j_menos_C_j(self.lista_todas_variaveis, lista_matriz_A, coeficientes_fo, vetor_coeficientes_C_B)
-            dicionario_resultados = self._calculo_simplex_fase2(
+            dicionario_fase2 = self._calculo_simplex_fase2(
                 lista_matriz_A, 
                 lista_coef_b, 
                 coeficientes_fo, # -> coeficiente_base_tableau_C_j
@@ -291,4 +302,4 @@ Depois pela Fase 2.'''
                 vetor_coeficientes_C_B, 
                 vetor_C_j_menos_Z_j,
                 )
-        return dicionario_resultados
+        return dicionario_fase2

@@ -1,4 +1,6 @@
 from otimizacao import Otimizador
 
 teste_vazio = Otimizador()
-teste_vazio.simplex(calculo_visivel=True)
+
+dicionario_teste =teste_vazio.simplex(calculo_visivel=True)
+print(dicionario_teste)
