@@ -80,11 +80,12 @@ class Otimizador:
         """Apresenta o problema em listas, na sua forma vetorial e matricial"""
         print('O problema tem a seguinte forma vetorial e matricial.')
         lista_matriz_A, lista_coef_b = self._tratamento_dados(self.funcao_objetivo, self.restricoes)
+        matriz_A_formatada = '\n'.join( '\t'+str(linha) for linha in lista_matriz_A)
         print(
-            f'''VARIAVEIS:', {self.lista_todas_variaveis},
-            '\nVETOR FUNÇÃO OBJETIVO:', {self.lista_fo},
-            '\nMATRIZ A:{ '\n'.join( '\t'+str(linha) for linha in lista_matriz_A)},
-            '\nVETOR b:{''.join(str(lista_coef_b))}'''
+            f'''VARIAVEIS:, {self.lista_todas_variaveis},
+            \nVETOR FUNÇÃO OBJETIVO:, {self.lista_fo},
+            \nMATRIZ A:{matriz_A_formatada},
+            \nVETOR b:{''.join(str(lista_coef_b))}'''
             )
     
 

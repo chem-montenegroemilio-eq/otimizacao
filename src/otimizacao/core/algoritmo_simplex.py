@@ -195,7 +195,8 @@ Das variaveis C_B tem-se {' '.join(f'{variavel}:{vetor_coeficientes_C_B[i]},'if 
         if funcao_valida_cotinuacao_fase1(lista_todas_variaveis, vetor_variaveis_C_B) is False:
             logger.info('As variáveis "a" sairam da base C_B. Finaliza a fase 1.')
             break
-        logger.info(f'''Matriz A:\n{'\n'.join( '\t'+str([round(elemento, 2) for elemento in fila]) for fila in lista_matriz_A)})
+        matriz_A_formatada = '\n'.join( '\t'+str([round(elemento, 2) for elemento in fila]) for fila in lista_matriz_A)
+        logger.info(f'''Matriz A:\n{matriz_A_formatada})
 Vetor b:\n \t{[round(coef,2) for coef in lista_coef_b]}
 \t\t\t\t\t----------------
 \t\t\t\t\tINICIA ITERACAO:
@@ -209,7 +210,8 @@ Vetor b:\n \t{[round(coef,2) for coef in lista_coef_b]}
             vetor_coeficientes_C_B, 
             coluna_pivo
             )
-        logger.info(f'''Matriz A tratada:\n{'\n'.join('\t'+str([round(elemento,2)for elemento in fila]) for fila in lista_matriz_A)}
+        matriz_A_formatada = '\n'.join('\t'+str([round(elemento,2)for elemento in fila]) for fila in lista_matriz_A)
+        logger.info(f'''Matriz A tratada:\n{matriz_A_formatada}
 Vetor b tratado:\n \t{[round(coef, 2) for coef in lista_coef_b]})
 \t\t\t\t----------------------------------
 \t\t\t\tINICIA CALCULO Z_j e Z_j menos C_j
