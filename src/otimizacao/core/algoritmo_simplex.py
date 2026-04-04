@@ -40,6 +40,7 @@ def atualizacao_coef_vetor_C_B(lista_todas_variaveis, coeficiente_base_tableau_C
         indice_a_ser_considerado = lista_todas_variaveis.index(variavel_C_B)
         valor_a_ser_substituido_em_C_B = coeficiente_base_tableau_C_j[indice_a_ser_considerado]       
         vetor_coeficientes_C_B[i] = valor_a_ser_substituido_em_C_B
+        # logger.info(f'Variavel {vetor_variaveis_C_B.index(fila_pivo)} eh substituida pela variavel')
     return vetor_variaveis_C_B, vetor_coeficientes_C_B
 
 
@@ -67,14 +68,14 @@ def funcao_C_j_e_C_B(definir_min_max, lista_todas_variaveis, lista_fo):
             else:
                 coeficiente_base_tableau_C_j.append(-lista_fo[i])
         elif 'a' in variavel:
-            if 'min' in definir_min_max:
-                coeficiente_base_tableau_C_j.append(-M)
-            else:
-                coeficiente_base_tableau_C_j.append(-M)
+            coeficiente_base_tableau_C_j.append(-M)
         else:
             coeficiente_base_tableau_C_j.append(0)
-    logger.info(f'lista_todas_variaveis:  {lista_todas_variaveis}')
-    logger.info(f'coeficiente_base_tableau_C_j  {coeficiente_base_tableau_C_j}')
+    if 'min' in definir_min_max:
+        logger.info('''\nO algoritmo é de maximizacao. 
+Para minimizacao, invertem-se os sinais dos coeficientes das variaves decisao.''')
+    logger.info(f'''Lista de todas as variaveis:  
+    {'  '.join( f"{round(coeficiente_base_tableau_C_j[i], 2)}{variavel}" if not 'a' in variavel else f'-M{variavel}' for i, variavel in enumerate(lista_todas_variaveis))}''')
 # 2. Cria-se vetor C_B que contenha as variaveis s_i, e a_i
     vetor_variaveis_C_B = []  
     for variavel in lista_todas_variaveis:
@@ -82,13 +83,13 @@ def funcao_C_j_e_C_B(definir_min_max, lista_todas_variaveis, lista_fo):
             vetor_variaveis_C_B.append(variavel)
         elif 'a' in variavel:
             vetor_variaveis_C_B.append(variavel)
-    logger.info(f'vetor_variaveis_C_B: {vetor_variaveis_C_B}')
 # 3 Define-se o vetor valores C_B baseado nos valores de s_i, e a_i
     vetor_coeficientes_C_B = []
     for i, variavel in enumerate(lista_todas_variaveis):
         if variavel in vetor_variaveis_C_B:
             vetor_coeficientes_C_B.append(coeficiente_base_tableau_C_j[i])
-    logger.info(f'Vetor_coeficientes_C_B:  {vetor_coeficientes_C_B}')
+    logger.info(f'''Vetor C_B:
+    {'  '.join(f"{variavel_CB}:{round(vetor_coeficientes_C_B[i],2)}" if not 'a' in variavel_CB else f"{variavel_CB}:-M"for i, variavel_CB in enumerate(vetor_variaveis_C_B))},   em que M é um valor muito grande (escolheu-se 100000000) ''')
     return coeficiente_base_tableau_C_j, vetor_variaveis_C_B, vetor_coeficientes_C_B
 
 
@@ -98,7 +99,7 @@ def funcao_calculo_iteracoes(lista_todas_variaveis, lista_matriz_A, lista_coef_b
     indice_coluna_pivo = lista_todas_variaveis.index(coluna_pivo) # lembrando que eh o valor da coluna que substitui o valor da fila
     indice_fila_pivo = vetor_variaveis_C_B.index(coluna_pivo)
     valor_pivo = lista_matriz_A[indice_fila_pivo][indice_coluna_pivo]
-    logger.info(f'Valor pivo{valor_pivo}')
+    logger.info(f'Valor pivo: {round(valor_pivo,2)} da fila {indice_fila_pivo+1} coluna {indice_coluna_pivo+1}')
 # 2 Percorre a fila pivo atualizando-a (o elemento pivo deve virar '1')
     for j, elemento_fila in enumerate(lista_matriz_A[indice_fila_pivo]):
         valor_pivo_substituir = float(elemento_fila / valor_pivo)
@@ -151,9 +152,15 @@ def funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
     historico_lista_razao = set()
 # 1 Condicional que precisa todos os valores de C_j_menos_Z_j ser <= 0 para parar (otimizacao tipo maximizacao)
     while any(e > 0 for e in vetor_C_j_menos_Z_j):
-        logger.info(f'''-------------------------------------------------------------------------------------
-        \tInicia loop n°{k+1}
-        'Vetor C_j_menos_Z_j:\n\t', {vetor_C_j_menos_Z_j}''')
+        logger.info(f'''\n---------------------------------------------------------------------------------------------------
+\t\t\t\t\tINICIA LOOP n°{k+1}
+---------------------------------------------------------------------------------------------------''')
+        if k == 0:
+            logger.info(f'''Vetor C_j menos Z_j: 
+\t{[round(numero,2) for numero in vetor_C_j_menos_Z_j]}''')
+        else:
+            pass
+#   {'  '.join(str(valor) for valor in vetor_C_j_menos_Z_j)}''')
         # PRECISA REDEFINIR (CRIAR FUNCAO?) - Evita loop infinito e outorga maior valor positivo de C_j-Z_j 
         lista_C_j_Z_j_evitar_infinito.append(tuple(vetor_C_j_menos_Z_j))
         maior_valor_C_j_Z_j = max(vetor_C_j_menos_Z_j)
@@ -164,7 +171,6 @@ def funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
 # 2 Obtencao do vetor razao e consequentemente fila pivo 
         vetor_razao, menor_valor_razao, fila_pivo = calculo_vetor_razao(lista_matriz_A, lista_coef_b, indice_maior_valor_C_j_Z_j, vetor_variaveis_C_B)
         # Evitando infinito
-        logger.info(f'vetor razao {vetor_razao}')
         if k==11:
             break
         
@@ -175,20 +181,22 @@ def funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
                   ''')
             break
         historico_lista_razao.add(estado)
-        logger.info(f'''Vetor razao: {vetor_razao}
-        Menor valor razao: {menor_valor_razao}
-        Vetor variaveis C_B: {vetor_variaveis_C_B}
-        Vetor coeficientes C_B: {vetor_coeficientes_C_B}''')    
+        vetor_razao_printar = [round(numero, 2) if not isinstance(numero,str) else 'desconsiderar'for numero in vetor_razao]
+        logger.info(f'''Vetor razao: {vetor_razao_printar}, com menor valor razao de {round(menor_valor_razao, 2)}
+Das variaveis C_B tem-se {' '.join(f'{variavel}:{vetor_coeficientes_C_B[i]},'if not 'a' in variavel else f'{variavel}:M,' for i, variavel in enumerate(vetor_variaveis_C_B) )}''')    
 # 3 Atualizam-se as variaveis e valores do vetor C_B        
+        logger.info(f'A variavel {fila_pivo} eh substituida pela variavel {coluna_pivo}')
         vetor_variaveis_C_B, vetor_coeficientes_C_B = atualizacao_coef_vetor_C_B(lista_todas_variaveis, coeficiente_base_tableau_C_j, vetor_variaveis_C_B, vetor_coeficientes_C_B, fila_pivo, coluna_pivo)
-        logger.info(f'novo vetor variaveis C_B: {vetor_variaveis_C_B}')
-        logger.info(f'novo vetor C_B: {vetor_coeficientes_C_B}')
+        logger.info(f'Novo vetor variaveis C_B: \n\t{vetor_variaveis_C_B}')
+        # logger.info(f'Novo vetor C_B: {vetor_coeficientes_C_B}')
         if funcao_valida_cotinuacao_fase1(lista_todas_variaveis, vetor_variaveis_C_B) is False:
             logger.info('As variáveis "a" sairam da base C_B. Finaliza a fase 1.')
             break
-        logger.info(f'''matriz_A:\n{'\n'.join( '\t'+str(fila) for fila in lista_matriz_A)})
-                    vetor b:\n \t', {lista_coef_b}
-                    '\n     # Inicia iteracao: ''')
+        logger.info(f'''Matriz A:\n{'\n'.join( '\t'+str([round(elemento, 2) for elemento in fila]) for fila in lista_matriz_A)})
+Vetor b:\n \t{[round(coef,2) for coef in lista_coef_b]}
+\t\t\t\t\t----------------
+\t\t\t\t\tINICIA ITERACAO:
+\t\t\t\t\t----------------''')
 # 3 Atualiza-se a matriz A e vetor b
         lista_matriz_A, lista_coef_b, vetor_coeficientes_C_B = funcao_calculo_iteracoes(
             lista_todas_variaveis, 
@@ -198,17 +206,19 @@ def funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
             vetor_coeficientes_C_B, 
             coluna_pivo
             )
-        logger.info(f'''matriz A tratada:\n' + {'\n'.join('\t'+str(fila) for fila in lista_matriz_A)}
-                    vetor_b tratado:\n \t', {lista_coef_b})    
-                    \n     # Inicia calculo Z_j_e_Z_j_menos_C_j''')
+        logger.info(f'''Matriz A tratada:\n{'\n'.join('\t'+str([round(elemento,2)for elemento in fila]) for fila in lista_matriz_A)}
+Vetor b tratado:\n \t{[round(coef, 2) for coef in lista_coef_b]})
+\t\t\t\t----------------------------------
+\t\t\t\tINICIA CALCULO Z_j e Z_j menos C_j
+\t\t\t\t----------------------------------''')
 # 4 Calcula Z_j e C_j-Z_j baseado nas variaveis e coeficientes da f.o. (C_j), na matriz A, e vetor C_B 
         vetor_Z_j, vetor_C_j_menos_Z_j = funcao_calculo_Z_j_e_Z_j_menos_C_j(
             lista_todas_variaveis, 
             lista_matriz_A, 
             coeficiente_base_tableau_C_j, 
             vetor_coeficientes_C_B)
-        logger.info(f'vetor_Z_j {vetor_Z_j}')
-        logger.info(f'vetor_C_j_menos_Z_j: {vetor_C_j_menos_Z_j}')
+        logger.info(f'Vetor Z_j:\n\t{[round(valor,2) for valor in vetor_Z_j]}')
+        logger.info(f'Vetor C_j menos Z_j:\n\t{[round(valor,2) for valor in vetor_C_j_menos_Z_j]}')
 
         k+=1
 # 5 Calcula otimo da f.o.= c_{j}*x_{j}
@@ -230,25 +240,30 @@ def funcao_maximizar_loop_C_jmenosZ_j_ate_menor_a_0(
     for i, variaveis in enumerate(vetor_variaveis_C_B):
         dicionario_variaveis_coeficientes_C_B[variaveis] = lista_coef_b[i]
     texto_fim_loop_fase1 = f'''
-    -------------------------------------------------------
-    -------------------------------------------------------
-    Fim do loop fase 1:
-    valores variaveis: \n {'\t'.join(str(variavel)+':'+str(dicionario_variaveis_coeficientes_C_B[variavel]) for i, variavel in enumerate(dicionario_variaveis_coeficientes_C_B))}
-    matriz_A:\n {'\n'.join( '\t' + str(linha) for linha in lista_matriz_A)}
-    vetor_b:\n \t {''.join(str(lista_coef_b))}
-    variaveis_c:\n \t {''.join(str(lista_todas_variaveis))}
-    \t {''.join(str(coeficiente_base_tableau_C_j))}
-    * Estao sendo incluidas as colunas das variaveis artificiais
-    '''
+\t\t\t-------------------------------------------------------
+\t\t\t-------------------------------------------------------
+\t\t\t\t\tFIM DO LOOP DA FASE 1:
+\t\t\t-------------------------------------------------------
+\t\t\t-------------------------------------------------------
+\t\t\tValores variaveis: \n\t\t\t\t {'  '.join(str(variavel)+':'+str(round(dicionario_variaveis_coeficientes_C_B[variavel],2)) for i, variavel in enumerate(dicionario_variaveis_coeficientes_C_B))}
+\t\t\tMatriz A:\n\t\t\t{'\n\t\t\t'.join( '  ' + str([round(elemento,2) for elemento in linha]) for linha in lista_matriz_A)}
+\t\t\tVetor b:\n\t\t\t  {''.join(str([round(coef,3) for coef in lista_coef_b]))}
+\t\t\tVariaveis junto com os coeficientes c_j:\n\t\t\t  {''.join(str(lista_todas_variaveis))}
+\t\t {''.join(str(coeficiente_base_tableau_C_j))}
+* Estao sendo incluidas as colunas das variaveis artificiais
+'''
 
     texto_fim_loop_fase2 = f'''
-    -------------------------------------------------------
-    -------------------------------------------------------
-    Fim do loop fase 2:
-    otimo da fo: {otimo_fo}
-    valores f.o.: \n\t{''.join(str(coeficientes_fo))}
-    matriz_A:\n {'\n'.join( '\t' + str(linha) for linha in lista_matriz_A)}
-    vetor_b:\n \t {''.join(str(lista_coef_b))}'''
+\t\t\t-------------------------------------------------------
+\t\t\t-------------------------------------------------------
+\t\t\t\t\tFIM DO LOOP DA FASE 2:
+\t\t\t-------------------------------------------------------
+\t\t\t-------------------------------------------------------
+\t\t\tOtimo da fo: {round(otimo_fo,2)}
+\t\t\tVetor decisao otimo: \n\t\t\t  {' '.join(str(vetor_variaveis_C_B[::-1][i])+'='+str(round(coeficiente,2))+',' for i, coeficiente in enumerate(lista_coef_b[::-1])) }
+\t\t\t  {' '.join(str(variavel)+'='+ '0' +',' for variavel in lista_todas_variaveis if variavel not in vetor_variaveis_C_B  ) }
+\t\t\tMatriz_A:\n\t\t\t{'\n\t\t\t'.join( '  ' + str([round(elemento,2) for elemento in linha]) for linha in lista_matriz_A)}
+\t\t\tVetor_b:\n\t\t\t  {''.join(str([round(coef,2) for coef in lista_coef_b]))}'''
     if validador == True:
         logger.info(texto_fim_loop_fase1)    
     else: 
