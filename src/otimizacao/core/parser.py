@@ -13,16 +13,16 @@ def funcao_coef_variaveis(string_equacao):
     # isto esta ok, e consiste em tirar os coeficientes e que a mesma dimensao da lista dos sinais concida com os coeficientes
     novo_string = string_equacao
     for i in range(1,100):
-        for sep in ['x_', 's_', 'e_']:
+        for sep in ['x_', 's_', 'e_', 'a_']:
             novo_string = novo_string.replace(f'{sep}{i}', 'o')
     novo_string = novo_string.replace(' ', '').replace('+', '').replace('-', '')    
-    lista_coeficiente = novo_string.split('o')    
     while 'oo' in novo_string:
         novo_string = novo_string.replace('oo', 'o1o')
+    lista_coeficiente = novo_string.split('o')    
     if '' in lista_coeficiente:
         lista_coeficiente.remove('')
     elif ' ' in lista_coeficiente:
-        lista_coeficiente.remove(' ')        
+        lista_coeficiente.remove(' ')
     # aqui separa pelos segmentos que contem coeficientes e x_ ou s_ ou e_
     separando_equacao = string_equacao.replace('-', '+').split('+')
     if '' in separando_equacao:
@@ -34,16 +34,16 @@ def funcao_coef_variaveis(string_equacao):
     for i, elemento in enumerate(separando_equacao):
         if 'x' in elemento:
             coeficiente, variavel = elemento.split('x')
-            dicionario_c[f'x{variavel.strip()}'] = float(f'{lista_sinal_coeficientes[i]}{coeficiente.strip()}')
+            dicionario_c[f'x{variavel.strip()}'] = float(f'{lista_sinal_coeficientes[i]}{lista_coeficiente[i].strip()}')
         elif 's' in elemento:
             coeficiente, variavel = elemento.split('s')
-            dicionario_c[f's{variavel.strip()}'] = float(f'{lista_sinal_coeficientes[i]}{coeficiente.strip()}')
+            dicionario_c[f's{variavel.strip()}'] = float(f'{lista_sinal_coeficientes[i]}{lista_coeficiente[i].strip()}')
         elif 'e' in elemento:
             coeficiente, variavel = elemento.split('e')
-            dicionario_c[f'e{variavel.strip()}'] = float(f'{lista_sinal_coeficientes[i]}{coeficiente.strip()}')
+            dicionario_c[f'e{variavel.strip()}'] = float(f'{lista_sinal_coeficientes[i]}{lista_coeficiente[i].strip()}')
         elif 'a' in elemento:
             coeficiente, variavel = elemento.split('a')
-            dicionario_c[f'a{variavel.strip()}'] = float(f'{lista_sinal_coeficientes[i]}{coeficiente.strip()}')
+            dicionario_c[f'a{variavel.strip()}'] = float(f'{lista_sinal_coeficientes[i]}{lista_coeficiente[i].strip()}')
     return dicionario_c
 
 
@@ -57,16 +57,18 @@ def matriz_restricoes(lista_restricoes):
         if '<=' in restricao:
             equacao_restricao, coef_b = restricao.split('<=') 
             equacao_restricao = equacao_restricao + f'+ 1s_{i}'
+            equacao_restricao = funcao_tratamento_string_inicio_equacao(equacao_restricao)
         # caso >=, entao adicionar e_i (variavel excedente) e tambem a_i (variavel artificial)
         elif '>=' in restricao:
             equacao_restricao, coef_b = restricao.split('>=')
             equacao_restricao = equacao_restricao + f'- 1e_{i} '
             equacao_restricao = equacao_restricao + f'+ 1a_{i} '
+            equacao_restricao = funcao_tratamento_string_inicio_equacao(equacao_restricao)
         # caso ==, entao adicionar a_i
         elif '==' in restricao:
             equacao_restricao, coef_b = restricao.split('==')
             equacao_restricao = equacao_restricao + f'+ 1a_{i} '
-
+            equacao_restricao = funcao_tratamento_string_inicio_equacao(equacao_restricao)
         dicionario_restricao = funcao_coef_variaveis(equacao_restricao)  
         tupla_matriz_A += (dicionario_restricao, )
         tupla_coef_b += (float(coef_b.strip()), )
