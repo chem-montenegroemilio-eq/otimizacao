@@ -103,12 +103,12 @@ def funcao_conversao_dicionario_funcaoobjetivo_em_lista_funcaoobjetivo(dicionari
 def funcao_tratamento_string_inicio_equacao(equacao):
     lista_teste  = [simbolo for simbolo in equacao]
     lista_salvar_para_comparar = [] # Esta lista viabiliza a analise antes do x
+    equacao_tratada_string = ''
     # percorre cada elemento da lista (a ser analisado)
     for elemento in lista_teste:
         lista_salvar_para_comparar.append(elemento)
         # analisa a equacao assim que atingir o primeiro x
         if 'x' in elemento:
-            # print('chegamos num x')
             # SE nao ha simbolo
             if not '+' in lista_salvar_para_comparar and not '-' in lista_salvar_para_comparar:
                 # se analisa cada elemento antes do x e se valida se ha numeros
@@ -128,7 +128,6 @@ def funcao_tratamento_string_inicio_equacao(equacao):
             else:
                 # se analisa cada elemento antes do x e se valida se ha numeros
                 analisar_lista_numeros = [True if elemento.isdigit() == True else False for elemento in lista_salvar_para_comparar]
-                print(analisar_lista_numeros)
                 if not True in analisar_lista_numeros:
                     # considera o caso que haja '+' no inicio
                     # CASO 3
@@ -147,8 +146,11 @@ def funcao_tratamento_string_inicio_equacao(equacao):
                     equacao_tratada_string = equacao
             break # quebra apos leitura do x (e analises posteriores)
             
-    if equacao_tratada_string != equacao:
+    if equacao_tratada_string == equacao:
+        pass
+    else:
         equacao_tratada_string = ''
         for letra in lista_equacao_tratada:
             equacao_tratada_string+=letra        
+
     return equacao_tratada_string
