@@ -1,5 +1,6 @@
 # ESTE _parser TRATA OS DADOS BRUTOS A SEREM CONVERTIDOS EM LISTAS A SEREM CALCULADAS PELO SIMPLEX
 
+
 ### Criando funcao para diferenciar componentes de equacao: coeficientes e variaveis
 def funcao_coef_variaveis(string_equacao):
     # isto esta ok, e consiste em tirar os sinais positivos ou negativos dos coeficientes
@@ -43,6 +44,7 @@ def funcao_coef_variaveis(string_equacao):
             dicionario_c[f'a{variavel.strip()}'] = float(f'{lista_sinal_coeficientes[i]}{coeficiente.strip()}')
     return dicionario_c
 
+
 ### Funcao para criar matriz de restricoes A, considerando variaveis folga, excedentes, e artificiais
 def matriz_restricoes(lista_restricoes):
         # caso <=, entao adicionar s_i (variavel de folga)
@@ -70,6 +72,7 @@ def matriz_restricoes(lista_restricoes):
         i += 1
     return tupla_matriz_A, tupla_coef_b
 
+
 ### Funcao conversao dicionario de restricao em lista de restricoes
 def funcao_conversao_dicionario_restricao_em_lista_restricao(tupla_restricoes, lista_todas_variaveis):
     lista_matriz_A = []
@@ -84,6 +87,7 @@ def funcao_conversao_dicionario_restricao_em_lista_restricao(tupla_restricoes, l
         lista_matriz_A.append(lista_restricao)
     return lista_matriz_A
 
+
 ### Funcao conversao dicionario de funcao em lista de funcao
 def funcao_conversao_dicionario_funcaoobjetivo_em_lista_funcaoobjetivo(dicionario_fo, lista_todas_variaveis):
     lista_fo = []
@@ -93,3 +97,58 @@ def funcao_conversao_dicionario_funcaoobjetivo_em_lista_funcaoobjetivo(dicionari
         else:   
             lista_fo.append(0)
     return lista_fo
+
+
+### Funcao que trata equacoes string que nao possuem simbolo e/ou numero no inicio
+def funcao_tratamento_string_inicio_equacao(equacao):
+    lista_teste  = [simbolo for simbolo in equacao]
+    lista_salvar_para_comparar = [] # Esta lista viabiliza a analise antes do x
+    # percorre cada elemento da lista (a ser analisado)
+    for elemento in lista_teste:
+        lista_salvar_para_comparar.append(elemento)
+        # analisa a equacao assim que atingir o primeiro x
+        if 'x' in elemento:
+            # print('chegamos num x')
+            # SE nao ha simbolo
+            if not '+' in lista_salvar_para_comparar and not '-' in lista_salvar_para_comparar:
+                # se analisa cada elemento antes do x e se valida se ha numeros
+                analisar_lista_numeros = [True if elemento.isdigit() == True else False for elemento in lista_salvar_para_comparar]
+                # condicional que detecta numero e simbolo
+                if True in analisar_lista_numeros:
+                    # CASO 2
+                    lista_auxiliar_simbolo = ['+']
+                    lista_auxiliar_simbolo.extend(lista_teste)
+                    lista_equacao_tratada = lista_auxiliar_simbolo
+                else:
+                    # CASO 1
+                    lista_auxiliar_simbolo = ['+', '1']
+                    lista_auxiliar_simbolo.extend(lista_teste)
+                    lista_equacao_tratada = lista_auxiliar_simbolo
+            # SE ha simbolo
+            else:
+                # se analisa cada elemento antes do x e se valida se ha numeros
+                analisar_lista_numeros = [True if elemento.isdigit() == True else False for elemento in lista_salvar_para_comparar]
+                print(analisar_lista_numeros)
+                if not True in analisar_lista_numeros:
+                    # considera o caso que haja '+' no inicio
+                    # CASO 3
+                    if '+' in lista_salvar_para_comparar:
+                        posicao_do_mais = lista_salvar_para_comparar.index('+')
+                        string_auxiliar = '+1'
+                        lista_teste[posicao_do_mais] = string_auxiliar
+                        lista_equacao_tratada = lista_teste
+                    # considera o caso que haja '-' no inicio
+                    elif '-' in lista_salvar_para_comparar:
+                        posicao_do_menos = lista_salvar_para_comparar.index('-')
+                        string_auxiliar = '-1'
+                        lista_teste[posicao_do_menos] = string_auxiliar
+                        lista_equacao_tratada = lista_teste
+                else:
+                    equacao_tratada_string = equacao
+            break # quebra apos leitura do x (e analises posteriores)
+            
+    if equacao_tratada_string != equacao:
+        equacao_tratada_string = ''
+        for letra in lista_equacao_tratada:
+            equacao_tratada_string+=letra        
+    return equacao_tratada_string
