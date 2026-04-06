@@ -17,6 +17,8 @@ def funcao_coef_variaveis(string_equacao):
             novo_string = novo_string.replace(f'{sep}{i}', 'o')
     novo_string = novo_string.replace(' ', '').replace('+', '').replace('-', '')    
     lista_coeficiente = novo_string.split('o')    
+    while 'oo' in novo_string:
+        novo_string = novo_string.replace('oo', 'o1o')
     if '' in lista_coeficiente:
         lista_coeficiente.remove('')
     elif ' ' in lista_coeficiente:
