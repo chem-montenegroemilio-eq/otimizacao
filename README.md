@@ -43,10 +43,6 @@ pip install git+https://github.com/chem-montenegroemilio-eq/otimizacao.git
 - Desenvolvido para aprendizado e ensino em otimização
 - Versão: 0.1.0 (em desenvolvimento)
 
-### Licença
-
-AGPL-3.0
-
 ---
 
 ## 🇪🇸 Español
@@ -69,10 +65,6 @@ pip install git+https://github.com/chem-montenegroemilio-eq/otimizacao.git
 - Diseñado para aprendizaje y enseñanza en optimización
 - Versión: 0.1.0 (en desarrollo)
 
-### Licencia
-
-AGPL-3.0
-
 ---
 
 ## 🇺🇸 English
@@ -94,7 +86,3 @@ pip install git+https://github.com/chem-montenegroemilio-eq/otimizacao.git
 - Visualization of matrices and vectors between iterations
 - Designed for learning and teaching optimization
 - Version: 0.1.0 (under development)
-
-### License
-
-AGPL-3.0
