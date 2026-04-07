@@ -24,7 +24,7 @@ from otimizacao import Otimizador
 
 # Executa um exemplo interno do método Simplex mostrando os calculos
 teste = Otimizador()
-# Roda um exemplo Simplex with saída passo-a-passo
+# Roda um exemplo Simplex com saída passo-a-passo
 teste.simplex(calculo_visivel=True)
 ```
 
