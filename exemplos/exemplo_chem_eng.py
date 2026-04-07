@@ -1,14 +1,16 @@
-# AINDA NAO ESSTA PRONTO
+# AINDA NAO ESTA PRONTO
 
-# SOLUCIONAR PROBLEMA DO HIMMELBLAU 
+# SOLUCIONAR PROBLEMA DO HIMMELBLAU EX. 12.1 Coluna de destilação 
 from otimizacao import Otimizador as otm
 # Exemplo de otimizacao LP do Himmelblau
-fo = 'max.   55 x_1 + 6x_2 - x_3 + 1x_4 + 5x_5'
-restricao1 = '+ 5x_1 - 4x_2 + 13x_3 - 2x_4 + 1x_5 == 20'
-restricao2 = '+ 1x_1 - 1x_2 + 5x_3 - 1x_4 + 1x_5 == 8'
+fo = ''
+restricao1 = ''
+restricao2 = ''
 
 teste = otm() 
-teste.adicionar_funcao_objetivo(funcao_objetivo= fo)
+teste.adicionar_funcao_objetivo(fo)
 teste.adicionar_restricao(restricao1)
 teste.adicionar_restricao(restricao2)
-teste.simplex(calculo_visivel=True)
+# teste.mostrar_problema()
+teste.mostrar_funcao_objetivo()
+# teste.simplex(calculo_visivel=False)
