@@ -254,7 +254,6 @@ class Otimizador:
         elif self.funcao_objetivo is None and self.restricoes != []:
             raise ValueError('Faltou adicionar restricoes.')
         """Determina a fase e retorna os valores resolvidos pelo metodo simplex."""
-        print(self.restricoes)
         self._tratamento_dados(self.funcao_objetivo, self.restricoes)
         # Para exibir os calculos
         configuracao_logging(calculo_visivel)
