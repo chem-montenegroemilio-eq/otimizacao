@@ -8,6 +8,8 @@ version = "0.1.0"
 description = "Biblioteca de otimizacao de facil uso e didatica em PT-BR"
 readme = "README.md"
 requires-python = ">=3.10"
+license = { text = "AGPL-3.0-only" }
+
 
 authors = [
   { name = "Emilio Fernando Montenegro Alvarado", email = "chem.montenegro.eq@gmail.com" }
@@ -19,7 +21,6 @@ dependencies = []
 Homepage = "https://github.com/chem-montenegroemilio-eq/otimizacao"
 Source = "https://github.com/chem-montenegroemilio-eq/otimizacao"
 
-license = { text = "AGPL-3.0-only" }
 
 classifiers = [
   "Development Status :: 3 - Alpha",
