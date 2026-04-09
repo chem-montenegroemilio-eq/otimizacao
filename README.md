@@ -16,9 +16,16 @@ Diferente de solvers do tipo 'caixa-preta', este projeto tem sido desenhado para
 
 ### Instalação - Installation
 
+#### Do PyPI
+```bash
+pip install otimizacao
+```
+
+#### Do GitHub
 ```bash
 pip install git+https://github.com/chem-montenegroemilio-eq/otimizacao.git
 ```
+#### Teste 
 ```python
 from otimizacao import Otimizador
 
