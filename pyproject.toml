@@ -15,7 +15,24 @@ authors = [
 
 dependencies = []
 
+[project.urls]
+Homepage = "https://github.com/chem-montenegroemilio-eq/otimizacao"
+Source = "https://github.com/chem-montenegroemilio-eq/otimizacao"
+
 license = { text = "AGPL-3.0-only" }
+
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Education",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: GNU Affero General Public License v3",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Topic :: Education",
+  "Topic :: Scientific/Engineering :: Mathematics"
+]
 
 [tool.setuptools]
 package-dir = {"" = "src"}
