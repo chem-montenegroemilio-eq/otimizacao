@@ -157,5 +157,5 @@ Alguns exemplos incluídos neste projeto foram baseados em referências da liter
 ## Links
 
 - **Site**: [https://github.com/chem-montenegroemilio-eq/otimizacao](https://github.com/chem-montenegroemilio-eq/otimizacao)
-- **PyPI**: Em breve
+- **PyPI**: [https://pypi.org/project/otimizacao/] (https://pypi.org/project/otimizacao/)
 - **Documentação**: Em breve
