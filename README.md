@@ -140,6 +140,7 @@ Alguns exemplos incluídos neste projeto foram baseados em referências da liter
 
 **Análise de Sensibilidade** 
 - Em breve
+
 **Programação Linear Fuzzy** 
 - Em breve
 
